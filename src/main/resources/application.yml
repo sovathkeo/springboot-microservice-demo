@@ -1,0 +1,58 @@
+spring:
+  datasource:
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    url: 'jdbc:sqlserver://localhost:1433;databaseName=demo;trustServerCertificate=true'
+    username: sa
+    password: M$Dem0Dotne!
+
+
+application:
+  name: spring-boot-demo
+
+info:
+  app:
+    name: spring-boot-demo
+    description: spring-boot microservice demo
+    version: 1.0.0
+
+jpa:
+  hibernate:
+    ddl-auto: update
+  show-sql: false
+  properties:
+    hibernate:
+      format_sql: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  security:
+    enabled: false
+  info:
+    env:
+      enabled: true
+
+  endpoint:
+    health:
+      show-details: always
+  shutdown:
+    enabled: true
+
+
+logging:
+  level:
+    org:
+      springframework:
+        web: DEBUG
+      hibernate: ERROR
+
+  pattern:
+    console: '%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %-38X{X-CorrelationId:-empty-correlation} %-40logger{0} : %msg%n'
+
+application-config:
+  endpoints-auth-whitelist:
+    - "/v3/api-docs"
+    - "/swagger-ui"
+    - "/actuator"
