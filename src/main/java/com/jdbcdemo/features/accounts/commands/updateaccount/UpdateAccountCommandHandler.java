@@ -6,9 +6,10 @@ import com.jdbcdemo.dtos.accounts.AccountDto;
 import com.jdbcdemo.dtos.base.AResponseBase;
 import com.jdbcdemo.services.accounts.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class UpdateAccountCommandHandler implements Command.Handler<UpdateAccountCommand, AResponseBase> {
-
 
     @Autowired
     private AccountService accountService;

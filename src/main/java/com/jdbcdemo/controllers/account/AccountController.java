@@ -41,12 +41,12 @@ public class AccountController extends BaseController {
     }
 
     @PostMapping("/accounts")
-    public ResponseImpl<AResponseBase> CreateAccount(@RequestBody CreateAccountCommand command) {
+    public ResponseImpl<AResponseBase> CreateAccount(@RequestBody @Valid CreateAccountCommand command) {
         return mediate(command);
     }
 
     @PutMapping("/accounts")
-    public ResponseImpl<AResponseBase> updateAccount( @Valid UpdateAccountCommand command ) {
+    public ResponseImpl<AResponseBase> updateAccount(@RequestBody @Valid UpdateAccountCommand command ) {
         return mediate(command);
     }
 }

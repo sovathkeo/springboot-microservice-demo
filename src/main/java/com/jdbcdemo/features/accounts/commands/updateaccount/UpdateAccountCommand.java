@@ -12,7 +12,8 @@ public class UpdateAccountCommand implements Command<AResponseBase> {
     @NotNull
     public long id;
 
-    @NotEmpty
+    @NotNull
+    @NotEmpty(message = "name can not be null or empty")
     public String name;
 
     @Min(15)

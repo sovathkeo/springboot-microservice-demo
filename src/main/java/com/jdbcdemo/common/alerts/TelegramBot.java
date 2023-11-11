@@ -1,19 +1,17 @@
 package com.jdbcdemo.common.alerts;
 
-import com.jdbcdemo.services.tracing.CorrelationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.servlet.server.Encoding;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.concurrent.CompletableFuture;
 
@@ -21,14 +19,13 @@ import java.util.concurrent.CompletableFuture;
 public class TelegramBot extends TelegramLongPollingBot {
 
     private final Logger logger = LoggerFactory.getLogger(TelegramBot.class);
-
     private static final String TELEGRAM_URL = "https://api.telegram.org/bot%s/sendMessage?chat_id=%s";
 
-    @Autowired
-    private RestTemplate restTemplate;
+    @Value("${application.name}")
+    private String applicationName;
 
     @Autowired
-    private CorrelationService correlationService;
+    private WebClient webClient;
 
     public TelegramBot() {
         super(BotToken);
@@ -53,29 +50,36 @@ public class TelegramBot extends TelegramLongPollingBot {
     }
 
     public void sendMessage( String text) {
-        var url = String.format(
-                "https://api.telegram.org/bot%s/sendMessage?chat_id=%s&text=%s",
-                BotToken,
-                ChatId,
-                URLEncoder.encode(text, Encoding.DEFAULT_CHARSET));
-
-        logger.error("==> correlationId = " + correlationService.getCorrelationId());
-
-        restTemplate.getForObject(url, String.class);
+        push(text);
     }
 
     @Async
     public void sendMessageAsync( Object payload) {
-        var url = String.format(
-                "https://api.telegram.org/bot%s/sendMessage?chat_id=%s",
-                BotToken,
-                ChatId);
-        var request = new HashMap<String, Object>() {
-            { {put("text", payload);} }
+
+        var message = new HashMap<String, Object>() {
+            { { put("serviceName", applicationName); put("message", payload);} }
         };
 
-        logger.error("==> correlationId = " + correlationService.getCorrelationId());
+        var request = new HashMap<String, Object>() {
+            { {put("text", message);} }
+        };
 
-        restTemplate.postForObject(url, request, String.class);
+        push(request);
+    }
+
+    private void push( Object payload ) {
+
+        var url = String.format(
+            "https://api.telegram.org/bot%s/sendMessage?chat_id=%s",
+            BotToken,
+            ChatId);
+
+        webClient
+            .post()
+            .uri(url)
+            .bodyValue(payload)
+            .retrieve()
+            .toEntity(String.class)
+            .block();
     }
 }

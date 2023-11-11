@@ -2,20 +2,37 @@ package com.jdbcdemo.seeding;
 
 import com.jdbcdemo.domain.entities.Account;
 import com.jdbcdemo.repositories.accounts.AccountRepository;
+import com.jdbcdemo.repositories.accounts.AccountRepositoryImpl;
+import com.jdbcdemo.services.accounts.AccountService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 
+
+@Component
 public class SeedAccountData {
 
-    public static void SeedAccount(AccountRepository accountRepo) {
-        for (var acc : GetAccountList() ) {
-            if (!accountRepo.existsByName(acc.getName()) ) {
-                accountRepo.save(acc);
+    @Autowired
+    AccountService accountService;
+
+
+    @EventListener
+    public void seed( ContextRefreshedEvent event ) {
+        seedAccount();
+    }
+
+    private void seedAccount() {
+        for (var acc : getAccountList() ) {
+            if (!accountService.isExistByName(acc.getName()) ) {
+                accountService.CreateAccount(acc);
             }
         }
     }
 
-    private static ArrayList<Account> GetAccountList() {
+    private static ArrayList<Account> getAccountList() {
         var accounts = new ArrayList<Account>();
 
         accounts.add(new Account("name-1",1));

@@ -28,6 +28,16 @@ public class AccountServiceImpl implements AccountService {
 
 
     @Override
+    public boolean isExistById( long accountId ) throws ApplicationException {
+        return accountRepository.existsById(accountId);
+    }
+
+    @Override
+    public boolean isExistByName( String accountName ){
+        return accountRepository.existsByName(accountName);
+    }
+
+    @Override
     @Async
     public CompletableFuture<AccountDto> GetAccountInfo(long id) throws ApplicationException {
 
@@ -53,7 +63,7 @@ public class AccountServiceImpl implements AccountService {
             throw new ResourceNotFoundException("404_01",String.format("account with id = '%s' not exist",command.id));
         }
         var acc = existing.get();
-        acc = new Account(acc.getId(), acc.getName(), acc.getAge());
+        acc = new Account(acc.getId(), command.name, command.age);
         accountRepository.save(acc);
         return modelMapper.map(acc, AccountDto.class);
     }

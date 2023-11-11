@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.validation.BindException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -55,6 +57,23 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
                 new ApplicationError(HttpStatus.INTERNAL_SERVER_ERROR.toString(),ex.getMessage()),
                 correlationId
             );
+
+        return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(
+            MethodArgumentNotValidException ex,
+            HttpHeaders headers,
+            HttpStatusCode status,
+            WebRequest request ) {
+        var correlationId = correlationService.getCorrelationId();
+        var body = ResponseImpl.Failed(
+            HttpStatus.INTERNAL_SERVER_ERROR.value(),
+            "failed",
+            new ApplicationError(HttpStatus.INTERNAL_SERVER_ERROR.toString(),ex.getMessage()),
+            correlationId
+        );
 
         return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
     }

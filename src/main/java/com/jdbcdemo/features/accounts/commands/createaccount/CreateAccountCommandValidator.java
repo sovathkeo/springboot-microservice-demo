@@ -5,7 +5,7 @@ import com.jdbcdemo.common.validators.ICommandValidator;
 import com.jdbcdemo.dtos.base.AResponseBase;
 import org.springframework.stereotype.Component;
 
-@Component
+
 public class CreateAccountCommandValidator implements ICommandValidator<CreateAccountCommand, AResponseBase> {
 
     @Override

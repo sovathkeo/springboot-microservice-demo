@@ -10,7 +10,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.concurrent.CompletableFuture;
 
+@Service
 public interface AccountService {
+
+    boolean isExistById(long accountId) throws ApplicationException;
+
+    boolean isExistByName(String accountName);
+
     @Async
     CompletableFuture<AccountDto> GetAccountInfo(long id) throws ApplicationException;
 
