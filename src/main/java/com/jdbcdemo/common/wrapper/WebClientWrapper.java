@@ -13,18 +13,24 @@ public class WebClientWrapper {
     @Autowired
     private WebClient.Builder webClientBuilder;
 
-    public WebClient.Builder useApiKeyAuthentication(String keyName, String keyValue) {
-        return webClientBuilder
-            .filter((req, next) -> ExchangeInterceptorFunctions.apiKeyAuthentication(req, next, keyName, keyValue));
+    public WebClient.Builder getWebClientBuilder() {
+        return webClientBuilder;
     }
 
-    public WebClient.Builder useBasicAuthentication(String username, String password) {
-        return webClientBuilder
+    public WebClientWrapper useApiKeyAuthentication( String keyName, String keyValue) {
+        webClientBuilder
+            .filter((req, next) -> ExchangeInterceptorFunctions.apiKeyAuthentication(req, next, keyName, keyValue));
+        return this;
+    }
+
+    public WebClientWrapper useBasicAuthentication(String username, String password) {
+        webClientBuilder
             .filter(ExchangeFilterFunctions.basicAuthentication(username, password));
+        return this;
     }
 
     public ResponseEntity<?> postSync(String url, Object payload) {
-        return webClientBuilder
+        return  webClientBuilder
             .build()
             .post()
             .uri(url)

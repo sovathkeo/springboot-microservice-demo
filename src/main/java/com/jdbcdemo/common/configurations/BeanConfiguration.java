@@ -46,9 +46,4 @@ public class BeanConfiguration {
             .builder()
             .filter((req, next) -> ExchangeInterceptorFunctions.addCorrelationIdHeader(req,correlationService, next));
     }
-
-    @Bean
-    public WebClientWrapper webClientWrapper() {
-        return new WebClientWrapper();
-    }
 }

@@ -1,12 +1,12 @@
 package com.jdbcdemo.common.alerts;
 
+import com.jdbcdemo.common.wrapper.WebClientWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.WebClient;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -25,7 +25,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     private String applicationName;
 
     @Autowired
-    private WebClient webClient;
+    private WebClientWrapper webClientWrapper;
 
     public TelegramBot() {
         super(BotToken);
@@ -56,12 +56,10 @@ public class TelegramBot extends TelegramLongPollingBot {
     @Async
     public void sendMessageAsync( Object payload) {
 
-        var message = new HashMap<String, Object>() {
-            { { put("serviceName", applicationName); put("message", payload);} }
-        };
-
         var request = new HashMap<String, Object>() {
-            { {put("text", message);} }
+            { {put("text", new HashMap<String, Object>() {
+                { { put("serviceName", applicationName); put("message", payload);} }
+            });} }
         };
 
         push(request);
@@ -74,12 +72,6 @@ public class TelegramBot extends TelegramLongPollingBot {
             BotToken,
             ChatId);
 
-        webClient
-            .post()
-            .uri(url)
-            .bodyValue(payload)
-            .retrieve()
-            .toEntity(String.class)
-            .block();
+        webClientWrapper.postSync(url, payload);
     }
 }
