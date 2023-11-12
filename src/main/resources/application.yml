@@ -4,14 +4,27 @@ spring:
     url: 'jdbc:sqlserver://localhost:1433;databaseName=demo;trustServerCertificate=true'
     username: sa
     password: M$Dem0Dotne!
+  config:
+    import: optional:configserver:http://localhost:8888
+  cloud:
+    config:
+      enabled: true
+      username: admin
+      password: 123
+      label: main
+  application:
+    name: microservice-template
 
+  mvc:
+    log-request-details: true
 
-application:
-  name: spring-boot-demo
+server:
+  port: 8080
+
 
 info:
   app:
-    name: spring-boot-demo
+    name: microservice-template
     description: spring-boot microservice demo
     version: 1.0.0
 
@@ -50,9 +63,3 @@ logging:
 
   pattern:
     console: '%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %-38X{X-CorrelationId:-empty-correlation} %-40logger{0} : %msg%n'
-
-application-config:
-  endpoints-auth-whitelist:
-    - "/v3/api-docs"
-    - "/swagger-ui"
-    - "/actuator"

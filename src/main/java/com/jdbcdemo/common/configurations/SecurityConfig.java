@@ -1,5 +1,6 @@
 package com.jdbcdemo.common.configurations;
 
+import com.jdbcdemo.common.filter.LogFilter;
 import com.jdbcdemo.common.security.authprovider.apikeyauth.ApiKeyAuthenticationProvider;
 import com.jdbcdemo.common.security.authprovider.basicauth.BasicAuthenticationProvider;
 import com.jdbcdemo.common.security.authprovider.bearerauth.BearerAuthenticationProvider;
@@ -35,16 +36,11 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            //.csrf(AbstractHttpConfigurer::disable)
-            /*.authorizeHttpRequests(x -> x
-                .requestMatchers("/actuator")
-                .permitAll()
-            )*/
+            .csrf(AbstractHttpConfigurer::disable)
             .sessionManagement(x -> x.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authenticationManager(authenticationManager())
-            .addFilterBefore(new ExceptionFilter(), UsernamePasswordAuthenticationFilter.class)
-        ;
-
+            .addFilterBefore(new LogFilter(), UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(new ExceptionFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

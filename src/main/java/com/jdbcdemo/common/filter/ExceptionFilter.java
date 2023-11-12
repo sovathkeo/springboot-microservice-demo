@@ -42,7 +42,6 @@ public class ExceptionFilter extends OncePerRequestFilter {
         try {
 
             Objects.requireNonNull(request).setAttribute(HttpHeaderConstant.CORRELATION_ID, correlationId);
-            MDC.put(HttpHeaderConstant.CORRELATION_ID,correlationId);
             Objects.requireNonNull(response).addHeader(HttpHeaderConstant.CORRELATION_ID,correlationId);
             Objects.requireNonNull(filterChain).doFilter(request, response);
 

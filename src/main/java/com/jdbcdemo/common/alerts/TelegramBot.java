@@ -1,5 +1,6 @@
 package com.jdbcdemo.common.alerts;
 
+import com.jdbcdemo.common.configurations.ApplicationConfiguration;
 import com.jdbcdemo.common.wrapper.WebClientWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,8 +22,8 @@ public class TelegramBot extends TelegramLongPollingBot {
     private final Logger logger = LoggerFactory.getLogger(TelegramBot.class);
     private static final String TELEGRAM_URL = "https://api.telegram.org/bot%s/sendMessage?chat_id=%s";
 
-    @Value("${application.name}")
-    private String applicationName;
+    @Autowired
+    private ApplicationConfiguration appSetting;
 
     @Autowired
     private WebClientWrapper webClientWrapper;
@@ -58,7 +59,7 @@ public class TelegramBot extends TelegramLongPollingBot {
 
         var request = new HashMap<String, Object>() {
             { {put("text", new HashMap<String, Object>() {
-                { { put("serviceName", applicationName); put("message", payload);} }
+                { { put("serviceName", appSetting.getApplicationName()); put("message", payload);} }
             });} }
         };
 

@@ -1,3 +1,4 @@
+
 package com.jdbcdemo.common.wrapper;
 
 import com.jdbcdemo.common.interceptor.ExchangeInterceptorFunctions;
@@ -6,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunctions;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 @Component
 public class WebClientWrapper {
@@ -29,7 +31,29 @@ public class WebClientWrapper {
         return this;
     }
 
+
+    public ResponseEntity<?> getSync(String url) {
+
+        return  webClientBuilder
+            .build()
+            .get()
+            .uri(url)
+            .retrieve()
+            .toEntity(Object.class)
+            .block();
+    }
+
+    public Mono<ResponseEntity<Object>> getAsync( String url) {
+        return  webClientBuilder
+            .build()
+            .get()
+            .uri(url)
+            .retrieve()
+            .toEntity(Object.class);
+    }
+
     public ResponseEntity<?> postSync(String url, Object payload) {
+
         return  webClientBuilder
             .build()
             .post()
@@ -38,5 +62,15 @@ public class WebClientWrapper {
             .retrieve()
             .toEntity(Object.class)
             .block();
+    }
+
+    public Mono<ResponseEntity<Object>> postAsync( String url, Object payload) {
+        return  webClientBuilder
+            .build()
+            .post()
+            .uri(url)
+            .bodyValue(payload)
+            .retrieve()
+            .toEntity(Object.class);
     }
 }
