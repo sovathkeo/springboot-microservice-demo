@@ -2,12 +2,13 @@ package com.jdbcdemo.common.configurations;
 
 import com.jdbcdemo.Application;
 import com.jdbcdemo.common.helper.StringHelper;
+import com.jdbcdemo.dtos.base.AResponseBase;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ConfigurationProperties(prefix = "application-config")
-public class ApplicationConfiguration {
+public class ApplicationConfiguration extends AResponseBase {
 
     public static final String APPLICATION_NAME = Application.class.getPackageName();
 
