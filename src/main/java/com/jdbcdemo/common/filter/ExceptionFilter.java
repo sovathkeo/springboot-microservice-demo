@@ -2,7 +2,7 @@ package com.jdbcdemo.common.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jdbcdemo.common.constant.HttpHeaderConstant;
-import com.jdbcdemo.common.exceptions.ApplicationError;
+import com.jdbcdemo.common.exceptions.models.ApplicationError;
 import com.jdbcdemo.dtos.responses.ResponseImpl;
 import com.jdbcdemo.services.tracing.CorrelationService;
 import jakarta.annotation.Nullable;
@@ -10,12 +10,8 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotNull;
-import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.MediaType;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import org.springframework.web.filter.OncePerRequestFilter;
 

@@ -1,7 +1,7 @@
 package com.jdbcdemo.features.accounts.commands.updateaccount;
 
 import an.awesome.pipelinr.Command;
-import com.jdbcdemo.common.exceptions.ApplicationException;
+import com.jdbcdemo.common.exceptions.models.ApplicationException;
 import com.jdbcdemo.dtos.accounts.AccountDto;
 import com.jdbcdemo.dtos.base.AResponseBase;
 import com.jdbcdemo.services.accounts.AccountService;

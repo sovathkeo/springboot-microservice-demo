@@ -1,6 +1,6 @@
 package com.jdbcdemo.dtos.responses;
 
-import com.jdbcdemo.common.exceptions.ApplicationError;
+import com.jdbcdemo.common.exceptions.models.ApplicationError;
 import com.jdbcdemo.dtos.base.AResponseBase;
 
 public class ResponseImpl<TData extends AResponseBase> {

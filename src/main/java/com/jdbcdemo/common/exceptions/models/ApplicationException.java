@@ -1,4 +1,4 @@
-package com.jdbcdemo.common.exceptions;
+package com.jdbcdemo.common.exceptions.models;
 
 import org.springframework.http.HttpStatusCode;
 

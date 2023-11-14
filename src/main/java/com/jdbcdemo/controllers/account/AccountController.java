@@ -1,7 +1,7 @@
 package com.jdbcdemo.controllers.account;
 
 import an.awesome.pipelinr.Pipeline;
-import com.jdbcdemo.common.exceptions.ApplicationException;
+import com.jdbcdemo.common.exceptions.models.ApplicationException;
 import com.jdbcdemo.controllers.base.BaseController;
 import com.jdbcdemo.dtos.base.AResponseBase;
 import com.jdbcdemo.dtos.responses.ResponseImpl;

@@ -1,9 +1,8 @@
 package com.jdbcdemo.features.accounts.commands.createaccount;
 
-import com.jdbcdemo.common.exceptions.ApplicationError;
+import com.jdbcdemo.common.exceptions.models.ApplicationError;
 import com.jdbcdemo.common.validators.ICommandValidator;
 import com.jdbcdemo.dtos.base.AResponseBase;
-import org.springframework.stereotype.Component;
 
 
 public class CreateAccountCommandValidator implements ICommandValidator<CreateAccountCommand, AResponseBase> {

@@ -1,8 +1,9 @@
-package com.jdbcdemo.common.exceptions;
+package com.jdbcdemo.common.exceptions.models;
 
+import com.jdbcdemo.common.exceptions.interfaces.IApplicationException;
 import org.springframework.http.HttpStatusCode;
 
-public class ApplicationRuntimeException  extends RuntimeException implements IApplicationException{
+public class ApplicationRuntimeException  extends RuntimeException implements IApplicationException {
     public ApplicationRuntimeException(Throwable e) {
         super(e);
     }

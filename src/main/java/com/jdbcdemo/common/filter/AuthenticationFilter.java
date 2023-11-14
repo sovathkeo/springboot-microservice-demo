@@ -3,7 +3,7 @@ package com.jdbcdemo.common.filter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jdbcdemo.common.configurations.ApplicationConfiguration;
 import com.jdbcdemo.common.constant.HttpHeaderConstant;
-import com.jdbcdemo.common.exceptions.ApplicationError;
+import com.jdbcdemo.common.exceptions.models.ApplicationError;
 import com.jdbcdemo.common.security.authprovider.apikeyauth.ApiKeyAuthentication;
 import com.jdbcdemo.common.security.authprovider.basicauth.BasicAuthentication;
 import com.jdbcdemo.common.security.authprovider.bearerauth.BearerAuthentication;

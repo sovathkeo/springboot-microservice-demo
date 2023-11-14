@@ -1,7 +1,6 @@
 package com.jdbcdemo.services.accounts;
 
-import com.jdbcdemo.common.exceptions.ApplicationException;
-import com.jdbcdemo.common.exceptions.ResourceNotFoundException;
+import com.jdbcdemo.common.exceptions.models.ApplicationException;
 import com.jdbcdemo.domain.entities.Account;
 import com.jdbcdemo.dtos.accounts.AccountDto;
 import com.jdbcdemo.features.accounts.commands.updateaccount.UpdateAccountCommand;

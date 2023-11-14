@@ -1,8 +1,11 @@
-package com.jdbcdemo.common.exceptions;
+package com.jdbcdemo.common.exceptions.handlers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jdbcdemo.common.alerts.TelegramBot;
+import com.jdbcdemo.common.exceptions.models.ApplicationError;
+import com.jdbcdemo.common.exceptions.models.ApplicationException;
+import com.jdbcdemo.common.exceptions.models.ApplicationRuntimeException;
 import com.jdbcdemo.dtos.responses.ResponseImpl;
 import com.jdbcdemo.services.tracing.CorrelationService;
 import org.slf4j.Logger;
@@ -14,7 +17,6 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

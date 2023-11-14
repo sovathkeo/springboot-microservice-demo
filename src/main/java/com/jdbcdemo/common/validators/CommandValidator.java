@@ -1,8 +1,8 @@
 package com.jdbcdemo.common.validators;
 
 import an.awesome.pipelinr.Command;
-import com.jdbcdemo.common.exceptions.ApplicationRuntimeException;
-import com.jdbcdemo.common.exceptions.BadRequestException;
+import com.jdbcdemo.common.exceptions.models.ApplicationRuntimeException;
+import com.jdbcdemo.common.exceptions.models.BadRequestException;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Component;
 
