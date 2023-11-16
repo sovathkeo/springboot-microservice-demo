@@ -21,4 +21,9 @@ public class ApplicationError {
     public boolean isNone() {
         return errorCode.equalsIgnoreCase("-1") && message.equalsIgnoreCase("-1");
     }
+
+
+    public static ApplicationError create(String errorCode, String message) {
+        return new ApplicationError(errorCode, message);
+    }
 }
