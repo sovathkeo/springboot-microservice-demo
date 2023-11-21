@@ -1,6 +1,7 @@
 package com.jdbcdemo.services.tracing;
 
 import com.jdbcdemo.common.constant.HttpHeaderConstant;
+import com.jdbcdemo.common.helper.StringHelper;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,12 @@ public class CorrelationServiceImpl implements CorrelationService{
         if (attr != null) {
 
             HttpServletRequest request = ((ServletRequestAttributes) attr).getRequest();
+
+            var existingCorrelationId = request.getHeader(HttpHeaderConstant.CORRELATION_ID);
+
+            if (! StringHelper.isNullOrEmpty(existingCorrelationId)) {
+                return existingCorrelationId;
+            }
 
             var correlationId = request.getAttribute(HttpHeaderConstant.CORRELATION_ID);
 
