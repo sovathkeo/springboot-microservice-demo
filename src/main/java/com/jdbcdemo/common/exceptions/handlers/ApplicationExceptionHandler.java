@@ -96,7 +96,8 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
         var correlationId = correlationService.getCorrelationId();
         var e = tryGetApplicationException(ex);
         HttpStatusCode statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
-        var appError = ApplicationError.create(String.valueOf(statusCode.value()), ex.getMessage());
+        var originalError = tryGetOriginalErrorMessage(ex);
+        var appError = ApplicationError.create(String.valueOf(statusCode.value()), originalError);
         if (e.isPresent()) {
             statusCode = e.get().getHttpStatusCode();
             appError = e.get().getError();
@@ -122,5 +123,19 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
             }
             ex = ex.getCause();
         }
+    }
+
+    private String tryGetOriginalErrorMessage(Exception e) {
+
+        Throwable cause = e.getCause();
+
+        while (cause != null) {
+            if (cause.getCause() == null) {
+                break;
+            }
+            cause = cause.getCause();
+        }
+
+        return cause != null ? cause.getMessage() : e.getMessage();
     }
 }
