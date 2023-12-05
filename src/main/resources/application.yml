@@ -9,7 +9,7 @@ spring:
   cloud:
     config:
       enabled: true
-      username: admin
+      username: ADMIN
       password: 123
       label: main
   application:
