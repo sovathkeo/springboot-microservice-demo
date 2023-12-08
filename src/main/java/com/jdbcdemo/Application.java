@@ -31,15 +31,17 @@ import java.util.UUID;
     info = @Info(
         title = "spring-boot-demo-api",
         description = "demo spring-boot microservice",
-        contact = @Contact(name = "KEO SOVATH", email = "sovathkeo123@gmail.com")
+        contact = @Contact(name = "Backend Developer", email = "backend@cellcard.com.kh")
     ),
     servers = {@Server(url = "http://localhost:8080"), @Server(url = "http://api.springboot-demo:8080")},
     security = { @SecurityRequirement(name = "X-API-KEY") }
 )
 public class Application {
-
+    private static final String DEFAULT_CONFIG_FILE = "application";
     public static void main(String[] args) {
         MDC.put(HttpHeaderConstant.CORRELATION_ID, new UUID(0L, 0L).toString());
+        System.setProperty("spring.config.name", "application-local");
+        System.getenv();
         SpringApplication.run(Application.class, args);
     }
 

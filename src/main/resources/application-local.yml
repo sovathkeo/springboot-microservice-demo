@@ -4,16 +4,16 @@ spring:
     url: 'jdbc:sqlserver://localhost:1433;databaseName=demo;trustServerCertificate=true'
     username: sa
     password: M$Dem0Dotne!
-  config:
-    import: optional:configserver:http://localhost:8889
+#  config:
+#    activate:
+#      on-profile: prod
+#    import: optional:configserver:http://localhost:8881
   cloud:
     config:
       enabled: false
       username: ADMIN
       password: 123
       label: main
-    discovery:
-      enabled: true
   application:
     name: microservice-template
 
@@ -64,4 +64,5 @@ logging:
       hibernate: ERROR
 
   pattern:
+    date-format: yyyy-dd-MM HH:mm:ss.SSS
     console: '%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %-38X{X-CorrelationId:-empty-correlation} %-40logger{0} : %msg%n'

@@ -2,7 +2,9 @@ package com.jdbcdemo.common.filter;
 
 import com.jdbcdemo.common.constant.HttpHeaderConstant;
 import com.jdbcdemo.common.helper.HttpRequestHelper;
-import com.jdbcdemo.common.helper.HttpResponseHelper;
+import com.jdbcdemo.common.helper.StringHelper;
+import com.jdbcdemo.common.helper.logging.LogFormatterHelper;
+import com.jdbcdemo.common.wrapper.UuidWrapper;
 import com.jdbcdemo.services.tracing.CorrelationService;
 import jakarta.annotation.Nullable;
 import jakarta.servlet.FilterChain;
@@ -39,8 +41,13 @@ public class LogFilter extends OncePerRequestFilter {
 
         Objects.requireNonNull(filterChain).doFilter(req, res);
 
-        logger.info("request body = " + HttpRequestHelper.getBodyAsString(req));
-        logger.info("response = " + HttpResponseHelper.getBodyAsString(res));
+        var logHelper = initializeLogParams(request, HttpRequestHelper.getBodyAsString(req));
+        logger.info(logHelper.getBasicParamLog());
+
+        logHelper.action = "Response";
+
+        logger.info(logHelper.getBasicParamLog());
+
         res.copyBodyToResponse();
     }
 
@@ -49,4 +56,32 @@ public class LogFilter extends OncePerRequestFilter {
             .processInjectionBasedOnServletContext(this, Objects.requireNonNull(request).getServletContext());
     }
 
+    private LogFormatterHelper initializeLogParams(HttpServletRequest request, String payload) {
+
+        final String serviceName = "WingBank Treasure Hunt";
+        final String methodName = "check eligibility";
+
+        final String transactionId = UuidWrapper.uuidAsString();
+        final String correlationId =  UuidWrapper.uuidAsString();
+        final String accountId = "855123456";
+        String clientIp = request.getHeader(HttpHeaderConstant.X_FORWARDED_FOR);
+        String requestId = request.getHeader(HttpHeaderConstant.X_CELLCARD_REQUEST_ID);
+
+        if (StringHelper.isNullOrEmpty(requestId)) {
+            requestId = UuidWrapper.uuidAsString();
+        }
+        if(clientIp == null) clientIp = request.getRemoteUser();
+        // common log declaration
+        return new LogFormatterHelper(
+                serviceName,
+                methodName ,
+                correlationId,
+                "",
+                transactionId,
+                requestId,
+                clientIp,
+                "",
+                accountId,
+                payload);
+    }
 }
