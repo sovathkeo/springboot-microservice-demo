@@ -7,7 +7,7 @@ import com.jdbcdemo.common.exceptions.models.ApplicationError;
 import com.jdbcdemo.common.security.authprovider.apikeyauth.ApiKeyAuthentication;
 import com.jdbcdemo.common.security.authprovider.basicauth.BasicAuthentication;
 import com.jdbcdemo.common.security.authprovider.bearerauth.BearerAuthentication;
-import com.jdbcdemo.dtos.responses.ResponseImpl;
+import com.jdbcdemo.dtos.responses.ResponseBase;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -102,7 +102,7 @@ public class AuthenticationFilter extends AbstractAuthenticationProcessingFilter
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
-        var res = ResponseImpl.Failed(
+        var res = ResponseBase.Failed(
             HttpServletResponse.SC_UNAUTHORIZED,
             "Unauthorized",
             new ApplicationError(String.valueOf(HttpServletResponse.SC_UNAUTHORIZED), failed.getMessage()), correlationId);

@@ -3,10 +3,9 @@ package com.jdbcdemo.common.exceptions.handlers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jdbcdemo.common.alerts.TelegramBot;
-import com.jdbcdemo.common.exceptions.models.ApplicationError;
 import com.jdbcdemo.common.exceptions.models.ApplicationException;
 import com.jdbcdemo.common.exceptions.models.ApplicationRuntimeException;
-import com.jdbcdemo.dtos.responses.ResponseImpl;
+import com.jdbcdemo.dtos.responses.Response;
 import com.jdbcdemo.services.tracing.CorrelationService;
 import jakarta.annotation.Nullable;
 import org.slf4j.Logger;
@@ -50,17 +49,14 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
     public ResponseEntity<Object> handleCustomException1(RuntimeException ex, WebRequest request) throws JsonProcessingException{
 
         var applicationException = tryGetApplicationException(ex);
+
         if (applicationException.isPresent()) {
             return handleApplicationException(applicationException.get(), request);
         }
 
         var correlationId = correlationService.getCorrelationId();
-        var body = ResponseImpl.Failed(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "failed",
-                new ApplicationError(HttpStatus.INTERNAL_SERVER_ERROR.toString(),ex.getMessage()),
-                correlationId
-            );
+
+        var body = Response.failure(HttpStatus.INTERNAL_SERVER_ERROR.toString(), ex.getMessage(),"request failed", correlationId);
 
         return handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
@@ -74,12 +70,8 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
 
         var correlationId = correlationService.getCorrelationId();
         var statusCode = HttpStatus.UNPROCESSABLE_ENTITY;
-        var body = ResponseImpl.Failed(
-            statusCode.value(),
-            "Validation failure",
-            new ApplicationError(String.valueOf(statusCode.value()),ex.getMessage()),
-            correlationId
-        );
+
+        var body = Response.failure(statusCode.toString(), "Validation failure",ex.getMessage(), correlationId);
 
         return handleExceptionInternal(
             ex,
@@ -97,13 +89,9 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
         var e = tryGetApplicationException(ex);
         HttpStatusCode statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
         var originalError = tryGetOriginalErrorMessage(ex);
-        var appError = ApplicationError.create(String.valueOf(statusCode.value()), originalError);
-        if (e.isPresent()) {
-            statusCode = e.get().getHttpStatusCode();
-            appError = e.get().getError();
 
-        }
-        var body = ResponseImpl.Failed(statusCode.value(),"internal error",appError,correlationId);
+        var body = Response.failure(statusCode.toString(), originalError, "something went wrong", correlationId);
+
         var bodyString = mapper.writeValueAsString(body);
         logger.error(bodyString, e);
 

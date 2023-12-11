@@ -5,6 +5,9 @@ import an.awesome.pipelinr.Notification;
 import an.awesome.pipelinr.Pipeline;
 import an.awesome.pipelinr.Pipelinr;
 import com.jdbcdemo.common.constant.HttpHeaderConstant;
+import com.jdbcdemo.common.constant.SystemEnvironmentConstant;
+import com.jdbcdemo.common.constant.SystemPropertyNameConstant;
+import com.jdbcdemo.common.helper.StringHelper;
 import com.jdbcdemo.common.registration.RegisterService;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
@@ -39,10 +42,24 @@ import java.util.UUID;
 public class Application {
     private static final String DEFAULT_CONFIG_FILE = "application";
     public static void main(String[] args) {
-        MDC.put(HttpHeaderConstant.CORRELATION_ID, new UUID(0L, 0L).toString());
-        System.setProperty("spring.config.name", "application-local");
-        System.getenv();
-        SpringApplication.run(Application.class, args);
+
+        try {
+            MDC.put(HttpHeaderConstant.CORRELATION_ID, new UUID(0L, 0L).toString());
+
+            System.setProperty(SystemPropertyNameConstant.SPRING_CONFIG_NAME, buildConfigFile());
+
+            SpringApplication.run(Application.class, args);
+        } catch (Exception e) {
+            throw e;
+        }
+
+    }
+
+    private static String buildConfigFile() {
+        var profile = System.getenv(SystemEnvironmentConstant.SPRING_PROFILES_ACTIVE);
+        return StringHelper.isNullOrEmpty(profile)
+            ? DEFAULT_CONFIG_FILE
+            : "%s-%s".formatted(DEFAULT_CONFIG_FILE, profile);
     }
 
     @PostConstruct

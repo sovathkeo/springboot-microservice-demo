@@ -11,9 +11,20 @@ public class AResponseBase {
     private final boolean succeeded = true;
 
     public AResponseBase() {
+        this.other = null;
     }
 
-    public static AResponseBase success() {
-        return new AResponseBase();
+    public AResponseBase(String other) {
+        this.other = other;
     }
+
+    public static AResponseBase success(String other) {
+        return new AResponseBase(other);
+    }
+
+    public static AResponseBase success(boolean bool) {
+        return new AResponseBase(String.valueOf(bool));
+    }
+
+    public String other;
 }

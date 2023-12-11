@@ -23,7 +23,7 @@ spring:
     log-request-details: true
 
 server:
-  port: 80
+  port: 8081
 
 
 info:
@@ -63,7 +63,6 @@ logging:
     org:
       springframework:
         web: DEBUG
-      hibernate: ERROR
 
   pattern:
     date-format: yyyy-dd-MM HH:mm:ss.SSS

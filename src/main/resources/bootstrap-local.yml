@@ -1,0 +1,8 @@
+spring:
+  cloud:
+    config:
+      enabled: false
+      uri: http://localhost:8881
+      username: ADMIN
+      password: 123
+      label: main
