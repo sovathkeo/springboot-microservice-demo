@@ -19,7 +19,7 @@ public class SeedAccountData {
     AccountService accountService;
 
 
-    @EventListener
+    //@EventListener
     public void seed( ContextRefreshedEvent event ) {
         seedAccount();
     }

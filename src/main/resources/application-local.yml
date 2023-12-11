@@ -4,6 +4,8 @@ spring:
     url: 'jdbc:sqlserver://localhost:1433;databaseName=demo;trustServerCertificate=true'
     username: sa
     password: M$Dem0Dotne!
+    hikari:
+      connection-timeout: 3000
 #  config:
 #    activate:
 #      on-profile: prod
@@ -21,7 +23,7 @@ spring:
     log-request-details: true
 
 server:
-  port: 8080
+  port: 80
 
 
 info:

@@ -41,12 +41,12 @@ public class LogFilter extends OncePerRequestFilter {
 
         Objects.requireNonNull(filterChain).doFilter(req, res);
 
-        var logHelper = initializeLogParams(request, HttpRequestHelper.getBodyAsString(req));
-        logger.info(logHelper.getBasicParamLog());
+        var logHelper = initializeLogParams(request, HttpRequestHelper.getBodyAsString(req), correlationId);
+        logger.info(logHelper.getLogMessage());
 
         logHelper.action = "Response";
-
-        logger.info(logHelper.getBasicParamLog());
+        logHelper.result = "success";
+        logger.info(logHelper.getLogMessage());
 
         res.copyBodyToResponse();
     }
@@ -56,17 +56,17 @@ public class LogFilter extends OncePerRequestFilter {
             .processInjectionBasedOnServletContext(this, Objects.requireNonNull(request).getServletContext());
     }
 
-    private LogFormatterHelper initializeLogParams(HttpServletRequest request, String payload) {
+    private LogFormatterHelper initializeLogParams(HttpServletRequest request, String payload, String correlationId) {
 
         final String serviceName = "WingBank Treasure Hunt";
         final String methodName = "check eligibility";
 
-        final String transactionId = UuidWrapper.uuidAsString();
-        final String correlationId =  UuidWrapper.uuidAsString();
         final String accountId = "855123456";
         String clientIp = request.getHeader(HttpHeaderConstant.X_FORWARDED_FOR);
         String requestId = request.getHeader(HttpHeaderConstant.X_CELLCARD_REQUEST_ID);
-
+        if (StringHelper.isNullOrEmpty(requestId)) {
+            requestId = correlationId;
+        }
         if (StringHelper.isNullOrEmpty(requestId)) {
             requestId = UuidWrapper.uuidAsString();
         }
@@ -77,11 +77,12 @@ public class LogFilter extends OncePerRequestFilter {
                 methodName ,
                 correlationId,
                 "",
-                transactionId,
+                correlationId,
                 requestId,
                 clientIp,
                 "",
                 accountId,
-                payload);
+                payload,
+                "Request");
     }
 }
