@@ -50,6 +50,7 @@ logging:
   level:
     org:
       springframework:
+        boot: OFF
         web: DEBUG
 
   pattern:

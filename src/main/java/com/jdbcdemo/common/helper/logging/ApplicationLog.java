@@ -1,12 +1,18 @@
 package com.jdbcdemo.common.helper.logging;
 
+import com.jdbcdemo.common.helper.StringHelper;
+import com.jdbcdemo.common.shareobject.ShareObject;
 import com.jdbcdemo.common.wrapper.DateTimeWrapper;
+import com.jdbcdemo.services.tracing.CorrelationService;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LogFormatterHelper {
+@AllArgsConstructor
+@NoArgsConstructor(force = true)
+public class ApplicationLog extends ShareObject {
 
     private final String logMessage = "action = , "
             .concat("service_name = , ")
@@ -35,63 +41,86 @@ public class LogFormatterHelper {
             .concat("username = ,")
             .concat("transaction_time = ");
 
-    private Map<String, String> hmLogParam;
-
     private String transactionTime;
-    private final String serviceName;
-    private final String methodName;
-    private final String correlationId;
-    private final String requestPlan;
-    private final String transactionId;
-    private final String requestId;
-    private final String clientIp;
-    private final String channel;
-    private final String accountId;
+    private String serviceName;
+    private String methodName;
+    private String correlationId;
+    private String requestPlan;
+    private String transactionId;
+    private String requestId;
+    private String clientIp;
+    private String channel;
+    private String accountId;
     public String action;
     public String payload;
-
     public String result;
+    public String step;
+    public String nei;
+    public String api;
+    public String errorCode;
+    public String errorMessage;
 
-    SimpleDateFormat formatter = new SimpleDateFormat(DateTimeWrapper.dateTimeFormat1);
+    public ApplicationLog(
+        String serviceName,
+        String methodName,
+        String requestPlan,
+        String clientIp,
+        String channel,
+        String accountId,
+        String payload,
+        CorrelationService correlationService ) {
 
-    public LogFormatterHelper(String serviceName, String methodName, String correlationId, String requestPlan, String transactionId, String requestId, String clientIp, String channel, String accountId) {
         this.serviceName = serviceName;
         this.methodName = methodName;
-        this.correlationId = correlationId;
+        this.correlationId = correlationService.getCorrelationId();
         this.requestPlan = requestPlan;
-        this.transactionId = transactionId;
-        this.requestId = requestId;
+        this.requestId = correlationService.getRequestId();
         this.clientIp = clientIp;
         this.channel = channel;
         this.accountId = accountId;
-    }
-
-    public LogFormatterHelper(
-            String serviceName,
-            String methodName,
-            String correlationId,
-            String requestPlan,
-            String transactionId,
-            String requestId,
-            String clientIp,
-            String channel,
-            String accountId,
-            String payload,
-            String action) {
-        this.serviceName = serviceName;
-        this.methodName = methodName;
-        this.correlationId = correlationId;
-        this.requestPlan = requestPlan;
-        this.transactionId = transactionId;
-        this.requestId = requestId;
-        this.clientIp = clientIp;
-        this.channel = channel;
-        this.accountId = accountId;
-        this.action = action;
         this.payload = payload;
+
+        this.transactionId = "";
+        this.action = "Start";
+        this.step = "0";
+        this.nei = serviceName;
+        this.api = methodName;
+        this.result = "";
+        this.errorCode = "";
+        this.errorMessage = "";
     }
 
-    public Map<String, String> getBasicParamLog() {
+    public void initLogParams(
+        String serviceName,
+        String methodName,
+        String requestPlan,
+        String clientIp,
+        String channel,
+        String accountId,
+        String payload,
+        CorrelationService correlationService ) {
+
+        this.serviceName = serviceName;
+        this.methodName = methodName;
+        this.correlationId = correlationService.getCorrelationId();
+        this.requestPlan = requestPlan;
+        this.requestId = correlationService.getRequestId();
+        this.clientIp = clientIp;
+        this.channel = channel;
+        this.accountId = accountId;
+        this.payload = payload;
+
+        this.transactionId = "";
+        this.action = "Start";
+        this.step = "0";
+        this.nei = serviceName;
+        this.api = methodName;
+        this.result = "";
+        this.errorCode = "";
+        this.errorMessage = "";
+    }
+
+    public Map<String, String> getLogParams() {
         return new HashMap<>(){
             { put(LogFormatterKeyHelper.transaction_time.getKey(), DateTimeWrapper.now(DateTimeWrapper.dateTimeFormat1)); }
             { put(LogFormatterKeyHelper.service_name.getKey(), serviceName); }
@@ -106,12 +135,35 @@ public class LogFormatterHelper {
             { put(LogFormatterKeyHelper.action.getKey(), action); }
             { put(LogFormatterKeyHelper.result.getKey(), result); }
             { put(LogFormatterKeyHelper.payload.getKey(), payload); }
+            { put(LogFormatterKeyHelper.step.getKey(), step); }
+            { put(LogFormatterKeyHelper.nei.getKey(), nei); }
+            { put(LogFormatterKeyHelper.api.getKey(), api); }
         };
+    }
+
+    public void setLogParams(String action, String step, String nei, String result, String api, String errorCode, String errorMessage){
+        this.action = StringHelper.getValueOrEmpty(action);
+        this.step = StringHelper.getValueOrEmpty(step);
+        this.nei = StringHelper.getValueOrEmpty(nei);
+        this.result = StringHelper.getValueOrEmpty(result);
+        this.api = StringHelper.getValueOrEmpty(api);
+        this.errorCode = StringHelper.getValueOrEmpty(errorCode);
+        this.errorMessage = StringHelper.getValueOrEmpty(errorMessage);
+    }
+
+    public void setRequestLogParams(String step, String nei, String api){
+        this.action = "Request";
+        this.step = StringHelper.getValueOrEmpty(step);
+        this.nei = StringHelper.getValueOrEmpty(nei);
+        this.result = "";
+        this.api = StringHelper.getValueOrEmpty(api);
+        this.errorCode = "";
+        this.errorMessage = "";
     }
 
     public String getLogMessage() {
         String logMessageTmp = this.logMessage;
-        var hmLog = getBasicParamLog();
+        var hmLog = getLogParams();
         try {
             for(String key : hmLog.keySet()){
                 String value = hmLog.get(key);
@@ -126,4 +178,5 @@ public class LogFormatterHelper {
 
         return logMessageTmp;
     }
+
 }

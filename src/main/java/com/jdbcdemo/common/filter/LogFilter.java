@@ -2,9 +2,8 @@ package com.jdbcdemo.common.filter;
 
 import com.jdbcdemo.common.configurations.appsetting.ApplicationConfiguration;
 import com.jdbcdemo.common.constant.HttpHeaderConstant;
-import com.jdbcdemo.common.helper.HttpRequestHelper;
 import com.jdbcdemo.common.helper.StringHelper;
-import com.jdbcdemo.common.helper.logging.LogFormatterHelper;
+import com.jdbcdemo.common.helper.logging.ApplicationLog;
 import com.jdbcdemo.common.wrapper.UuidWrapper;
 import com.jdbcdemo.services.tracing.CorrelationService;
 import jakarta.servlet.FilterChain;
@@ -15,8 +14,6 @@ import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.springframework.web.util.ContentCachingRequestWrapper;
-import org.springframework.web.util.ContentCachingResponseWrapper;
 import reactor.util.annotation.Nullable;
 
 import java.io.IOException;
@@ -60,7 +57,7 @@ public class LogFilter extends OncePerRequestFilter {
             .processInjectionBasedOnServletContext(this, Objects.requireNonNull(request).getServletContext());
     }
 
-    private LogFormatterHelper initializeLogParams(HttpServletRequest request, String payload, String correlationId) {
+    private ApplicationLog initializeLogParams( HttpServletRequest request, String payload, String correlationId) {
 
         final String serviceName = appSetting.getApplicationName();
         final String methodName = "check eligibility";
@@ -75,17 +72,14 @@ public class LogFilter extends OncePerRequestFilter {
         }
         if(clientIp == null) clientIp = request.getRemoteUser();
         // common log declaration
-        return new LogFormatterHelper(
-                serviceName,
-                methodName ,
-                correlationId,
-                "",
-                correlationId,
-                requestId,
-                clientIp,
-                "",
-                "85599204681",
-                payload,
-                "Request");
+        return new ApplicationLog(
+            serviceName,
+            methodName ,
+            "",
+            clientIp,
+            "",
+            "85599204681",
+            payload,
+            correlationService);
     }
 }

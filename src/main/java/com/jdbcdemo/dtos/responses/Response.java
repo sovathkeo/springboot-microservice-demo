@@ -2,6 +2,7 @@ package com.jdbcdemo.dtos.responses;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.jdbcdemo.services.tracing.CorrelationService;
 
 
 @JsonIgnoreProperties(value = {"$$beanFactory"})
@@ -17,8 +18,8 @@ public class Response {
         this.data = ResponseData.success();
     }
 
-    protected Response(ResponseData cusomResponseData, String correlationId) {
-        this.meta = ResponseMeta.buildMeta(correlationId);
+    protected Response(ResponseData cusomResponseData, CorrelationService correlationService) {
+        this.meta = ResponseMeta.buildMeta(correlationService);
         this.data = ResponseData.success(cusomResponseData);
     }
 
@@ -38,14 +39,19 @@ public class Response {
         this.data = ResponseData.failed(errorCode, errorMessage, errorDescription);
     }
 
+    protected Response(String errorCode, String errorMessage, String errorDescription, String correlationId, String requestId) {
+        this.meta = ResponseMeta.buildMeta(correlationId, requestId);
+        this.data = ResponseData.failed(errorCode, errorMessage, errorDescription);
+    }
+
     public static Response success() {
         return new Response();
     }
 
     public static Response success(
             ResponseData customResponseData,
-            String correlationId) {
-        return new Response(customResponseData, correlationId);
+            CorrelationService correlationService) {
+        return new Response(customResponseData, correlationService);
     }
 
     public static Response success(String errorMessage) {
@@ -60,6 +66,10 @@ public class Response {
 
     public static Response failure(String errorCode, String errorMessage, String errorDescription, String correlationId) {
         return new Response(errorCode, errorMessage, errorDescription, correlationId);
+    }
+
+    public static Response failure( String errorCode, String errorMessage, String errorDescription, CorrelationService correlationService ) {
+        return new Response(errorCode, errorMessage, errorDescription, correlationService.getCorrelationId(), correlationService.getRequestId());
     }
 
     // End build failed response

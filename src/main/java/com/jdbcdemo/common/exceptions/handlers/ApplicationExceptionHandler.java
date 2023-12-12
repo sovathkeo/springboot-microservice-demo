@@ -84,13 +84,11 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
     private ResponseEntity<Object> handleApplicationException(
         Exception ex,
         WebRequest request) throws JsonProcessingException{
-
-        var correlationId = correlationService.getCorrelationId();
         var e = tryGetApplicationException(ex);
         HttpStatusCode statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
         var originalError = tryGetOriginalErrorMessage(ex);
 
-        var body = Response.failure(statusCode.toString(), originalError, "something went wrong", correlationId);
+        var body = Response.failure(statusCode.toString(), originalError, "something went wrong", correlationService);
 
         var bodyString = mapper.writeValueAsString(body);
         logger.error(bodyString, e);

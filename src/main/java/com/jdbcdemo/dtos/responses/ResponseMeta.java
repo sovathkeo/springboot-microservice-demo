@@ -3,6 +3,7 @@ package com.jdbcdemo.dtos.responses;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.jdbcdemo.common.wrapper.DateTimeWrapper;
 import com.jdbcdemo.common.wrapper.UuidWrapper;
+import com.jdbcdemo.services.tracing.CorrelationService;
 
 public class ResponseMeta {
 
@@ -25,5 +26,13 @@ public class ResponseMeta {
 
     public static ResponseMeta buildMeta( String correlationId) {
         return new ResponseMeta(correlationId, UuidWrapper.uuidAsString());
+    }
+
+    public static ResponseMeta buildMeta( CorrelationService correlationService ) {
+        return new ResponseMeta(correlationService.getCorrelationId(), correlationService.getRequestId());
+    }
+
+    public static ResponseMeta buildMeta( String correlationId, String requestId) {
+        return new ResponseMeta(correlationId, requestId);
     }
 }

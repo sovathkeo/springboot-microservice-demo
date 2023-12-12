@@ -39,6 +39,7 @@ public class ExceptionFilter extends OncePerRequestFilter {
 
             Objects.requireNonNull(request).setAttribute(HttpHeaderConstant.CORRELATION_ID, correlationId);
             Objects.requireNonNull(request).setAttribute(HttpHeaderConstant.X_CELLCARD_REQUEST_ID, requestId);
+
             Objects.requireNonNull(response).addHeader(HttpHeaderConstant.CORRELATION_ID,correlationId);
             Objects.requireNonNull(filterChain).doFilter(request, response);
 
