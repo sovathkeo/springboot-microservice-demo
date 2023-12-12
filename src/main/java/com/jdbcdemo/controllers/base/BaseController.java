@@ -20,15 +20,11 @@ public class BaseController {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private ApplicationConfiguration appSetting;
-
     @Autowired
     private Pipeline pipeline;
-
     @Autowired
     private CorrelationService correlationService;
-
     HttpServletRequest request;
-
     protected BaseController(HttpServletRequest request) {
         this.request = request;
     }
@@ -36,7 +32,13 @@ public class BaseController {
     public Response mediate(CommandWrapper command ) {
         var logHelper = initializeLogParams(command, this.request , HttpRequestHelper.getBodyAsString(this.request), correlationService.getCorrelationId());
         logger.info(logHelper.getLogMessage());
-        return command.execute(pipeline);
+        var res =  command.execute(pipeline);
+
+        res.setRequestId(correlationService.getRequestId());
+        logHelper.action = "response";
+        logHelper.result = "success";
+        logger.info(logHelper.getLogMessage());
+        return res;
     }
 
     private LogFormatterHelper initializeLogParams(
@@ -67,7 +69,7 @@ public class BaseController {
                 requestId,
                 clientIp,
                 "",
-                "85599204681",
+                command.accountId,
                 payload,
                 "Request");
     }

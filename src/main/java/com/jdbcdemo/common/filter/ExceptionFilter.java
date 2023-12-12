@@ -34,10 +34,11 @@ public class ExceptionFilter extends OncePerRequestFilter {
 
         configureInjectionBasedOnServletContext(request);
         var correlationId = correlationService.getCorrelationId();
-
+        var requestId = correlationService.getRequestId();
         try {
 
             Objects.requireNonNull(request).setAttribute(HttpHeaderConstant.CORRELATION_ID, correlationId);
+            Objects.requireNonNull(request).setAttribute(HttpHeaderConstant.X_CELLCARD_REQUEST_ID, requestId);
             Objects.requireNonNull(response).addHeader(HttpHeaderConstant.CORRELATION_ID,correlationId);
             Objects.requireNonNull(filterChain).doFilter(request, response);
 

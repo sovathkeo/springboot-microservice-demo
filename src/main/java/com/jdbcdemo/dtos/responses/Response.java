@@ -42,7 +42,9 @@ public class Response {
         return new Response();
     }
 
-    public static Response success(ResponseData customResponseData, String correlationId) {
+    public static Response success(
+            ResponseData customResponseData,
+            String correlationId) {
         return new Response(customResponseData, correlationId);
     }
 
@@ -61,5 +63,10 @@ public class Response {
     }
 
     // End build failed response
+
+
+    public void setRequestId(String requestId) {
+        this.meta.requestId = requestId;
+    }
 }
 

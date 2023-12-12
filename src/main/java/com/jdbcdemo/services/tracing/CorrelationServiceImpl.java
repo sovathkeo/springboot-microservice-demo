@@ -42,4 +42,29 @@ public class CorrelationServiceImpl implements CorrelationService{
 
         return UUID.randomUUID().toString();
     }
+
+    @Override
+    public String getRequestId() {
+
+        RequestAttributes attr = RequestContextHolder.getRequestAttributes();
+
+        if (attr != null) {
+
+            HttpServletRequest request = ((ServletRequestAttributes) attr).getRequest();
+
+            var existing = request.getHeader(HttpHeaderConstant.X_CELLCARD_REQUEST_ID);
+
+            if (! StringHelper.isNullOrEmpty(existing)) {
+                return existing;
+            }
+
+            var requestId = request.getAttribute(HttpHeaderConstant.X_CELLCARD_REQUEST_ID);
+
+            if (requestId != null && StringUtils.hasText(requestId.toString())) {
+                return requestId.toString();
+            }
+        }
+
+        return UUID.randomUUID().toString();
+    }
 }
