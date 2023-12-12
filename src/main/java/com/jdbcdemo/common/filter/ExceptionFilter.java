@@ -3,7 +3,7 @@ package com.jdbcdemo.common.filter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jdbcdemo.common.constant.HttpHeaderConstant;
 import com.jdbcdemo.common.exceptions.models.ApplicationError;
-import com.jdbcdemo.dtos.responses.ResponseBase;
+import com.jdbcdemo.dtos.responses.Response;
 import com.jdbcdemo.services.tracing.CorrelationService;
 import jakarta.annotation.Nullable;
 import jakarta.servlet.FilterChain;
@@ -47,12 +47,7 @@ public class ExceptionFilter extends OncePerRequestFilter {
 
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
-            var res = ResponseBase.Failed(
-                    HttpServletResponse.SC_UNAUTHORIZED,
-                    "Unauthorized",
-                    new ApplicationError(String.valueOf(HttpServletResponse.SC_UNAUTHORIZED), exp.getMessage()),
-                    correlationId
-                );
+            var res = Response.failure(String.valueOf(HttpServletResponse.SC_UNAUTHORIZED),"Unauthorized",exp.getMessage(),correlationId);
 
             var body = mapper.writeValueAsString(res);
 

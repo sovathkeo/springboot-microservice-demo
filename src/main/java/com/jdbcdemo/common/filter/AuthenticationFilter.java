@@ -1,13 +1,12 @@
 package com.jdbcdemo.common.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jdbcdemo.common.configurations.ApplicationConfiguration;
+import com.jdbcdemo.common.configurations.appsetting.ApplicationConfiguration;
 import com.jdbcdemo.common.constant.HttpHeaderConstant;
-import com.jdbcdemo.common.exceptions.models.ApplicationError;
 import com.jdbcdemo.common.security.authprovider.apikeyauth.ApiKeyAuthentication;
 import com.jdbcdemo.common.security.authprovider.basicauth.BasicAuthentication;
 import com.jdbcdemo.common.security.authprovider.bearerauth.BearerAuthentication;
-import com.jdbcdemo.dtos.responses.ResponseBase;
+import com.jdbcdemo.dtos.responses.Response;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -102,12 +101,12 @@ public class AuthenticationFilter extends AbstractAuthenticationProcessingFilter
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
-        var res = ResponseBase.Failed(
-            HttpServletResponse.SC_UNAUTHORIZED,
-            "Unauthorized",
-            new ApplicationError(String.valueOf(HttpServletResponse.SC_UNAUTHORIZED), failed.getMessage()), correlationId);
+        var r = Response.failure(
+                String.valueOf(HttpServletResponse.SC_UNAUTHORIZED),
+                "Unauthorized",
+                failed.getMessage(),correlationId);
 
-        var body = mapper.writeValueAsString(res);
+        var body = mapper.writeValueAsString(r);
 
         PrintWriter writer = response.getWriter();
 

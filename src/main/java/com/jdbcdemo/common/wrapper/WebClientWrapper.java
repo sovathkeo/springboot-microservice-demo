@@ -3,6 +3,7 @@ package com.jdbcdemo.common.wrapper;
 
 import com.jdbcdemo.common.interceptor.ExchangeInterceptorFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunctions;
@@ -52,7 +53,7 @@ public class WebClientWrapper {
             .toEntity(Object.class);
     }
 
-    public ResponseEntity<?> postSync(String url, Object payload) {
+    public ResponseEntity<?> post(String url, Object payload) {
 
         return  webClientBuilder
             .build()
@@ -64,13 +65,15 @@ public class WebClientWrapper {
             .block();
     }
 
-    public Mono<ResponseEntity<Object>> postAsync( String url, Object payload) {
+    public Mono<ResponseEntity<String>> postXmlAsync(String url, Object payload) {
         return  webClientBuilder
             .build()
             .post()
             .uri(url)
+            .contentType(MediaType.APPLICATION_XML)
             .bodyValue(payload)
             .retrieve()
-            .toEntity(Object.class);
+            .toEntity(String.class)
+            ;
     }
 }

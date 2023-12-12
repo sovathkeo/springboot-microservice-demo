@@ -1,19 +1,26 @@
 package com.jdbcdemo.features.app.queries;
 
-import com.jdbcdemo.common.configurations.ApplicationConfiguration;
+import com.jdbcdemo.common.configurations.appsetting.ApplicationConfiguration;
 import com.jdbcdemo.common.wrapper.CommandHandler;
-import com.jdbcdemo.dtos.base.AResponseBase;
+import com.jdbcdemo.dtos.responses.AppInfoResponseImpl;
+import com.jdbcdemo.dtos.responses.Response;
+import com.jdbcdemo.services.tracing.CorrelationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class GetAppInfoQueryHandler implements CommandHandler<GetAppInfoQuery, AResponseBase> {
+public class GetAppInfoQueryHandler implements CommandHandler<GetAppInfoQuery, Response> {
 
     @Autowired
     private ApplicationConfiguration appInfo;
 
+    @Autowired
+    private CorrelationService correlationService;
+
     @Override
-    public AResponseBase handle( GetAppInfoQuery getAppInfoQuery ) {
-        return appInfo;
+    public Response handle( GetAppInfoQuery getAppInfoQuery ) {
+        AppInfoResponseImpl app = new AppInfoResponseImpl();
+        app.setAppSetting(appInfo);
+        return Response.success(app, correlationService.getCorrelationId());
     }
 }

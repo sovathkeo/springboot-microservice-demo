@@ -1,9 +1,6 @@
 package com.jdbcdemo.dtos.app;
 
-import com.jdbcdemo.dtos.base.AResponseBase;
-
-public class AppInfoDto extends AResponseBase {
-
+public class AppInfoDto {
 
     public AppInfoDto(String name) {
 

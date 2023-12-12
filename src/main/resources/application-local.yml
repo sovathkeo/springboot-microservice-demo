@@ -6,10 +6,6 @@ spring:
     password: M$Dem0Dotne!
     hikari:
       connection-timeout: 3000
-#  config:
-#    activate:
-#      on-profile: prod
-#    import: optional:configserver:http://localhost:8881
   cloud:
     config:
       enabled: false
@@ -17,20 +13,13 @@ spring:
       password: 123
       label: main
   application:
-    name: microservice-template
+    name: "WingBank Treasure Hunt"
 
   mvc:
     log-request-details: true
 
 server:
   port: 8081
-
-
-info:
-  app:
-    name: microservice-template
-    description: spring-boot microservice demo
-    version: 1.0.0
 
 jpa:
   hibernate:
@@ -57,7 +46,6 @@ management:
   shutdown:
     enabled: true
 
-
 logging:
   level:
     org:
@@ -67,3 +55,8 @@ logging:
   pattern:
     date-format: yyyy-dd-MM HH:mm:ss.SSS
     console: '%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %-38X{X-CorrelationId:-empty-correlation} %-40logger{0} : %msg%n'
+
+application-config:
+  microservices:
+    ocs-service:
+      base-url: "https://prd-apiserver.camgsm.com.kh/services/surepay"

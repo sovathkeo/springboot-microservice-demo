@@ -12,4 +12,8 @@ public class DateTimeWrapper {
     public static String now(String format) {
         return new SimpleDateFormat(format).format(now());
     }
+
+    public static String getTimestamp() {
+        return String.valueOf(System.currentTimeMillis());
+    }
 }

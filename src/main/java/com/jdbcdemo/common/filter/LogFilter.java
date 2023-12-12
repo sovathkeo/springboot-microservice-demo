@@ -1,5 +1,6 @@
 package com.jdbcdemo.common.filter;
 
+import com.jdbcdemo.common.configurations.appsetting.ApplicationConfiguration;
 import com.jdbcdemo.common.constant.HttpHeaderConstant;
 import com.jdbcdemo.common.helper.HttpRequestHelper;
 import com.jdbcdemo.common.helper.StringHelper;
@@ -24,6 +25,8 @@ import java.util.Objects;
 public class LogFilter extends OncePerRequestFilter {
 
     @Autowired
+    private ApplicationConfiguration appSetting;
+    @Autowired
     private CorrelationService correlationService;
 
     @Override
@@ -35,7 +38,8 @@ public class LogFilter extends OncePerRequestFilter {
         configureInjectionBasedOnServletContext(request);
         var correlationId = correlationService.getCorrelationId();
         MDC.put(HttpHeaderConstant.CORRELATION_ID,correlationId);
-
+        Objects.requireNonNull(filterChain).doFilter(request, response);
+        /*
         ContentCachingRequestWrapper req = new ContentCachingRequestWrapper(Objects.requireNonNull(request));
         ContentCachingResponseWrapper res = new ContentCachingResponseWrapper(Objects.requireNonNull(response));
 
@@ -48,7 +52,7 @@ public class LogFilter extends OncePerRequestFilter {
         logHelper.result = "success";
         logger.info(logHelper.getLogMessage());
 
-        res.copyBodyToResponse();
+        res.copyBodyToResponse();*/
     }
 
     private void configureInjectionBasedOnServletContext(HttpServletRequest request) {
@@ -58,10 +62,9 @@ public class LogFilter extends OncePerRequestFilter {
 
     private LogFormatterHelper initializeLogParams(HttpServletRequest request, String payload, String correlationId) {
 
-        final String serviceName = "WingBank Treasure Hunt";
+        final String serviceName = appSetting.getApplicationName();
         final String methodName = "check eligibility";
 
-        final String accountId = "855123456";
         String clientIp = request.getHeader(HttpHeaderConstant.X_FORWARDED_FOR);
         String requestId = request.getHeader(HttpHeaderConstant.X_CELLCARD_REQUEST_ID);
         if (StringHelper.isNullOrEmpty(requestId)) {
@@ -81,7 +84,7 @@ public class LogFilter extends OncePerRequestFilter {
                 requestId,
                 clientIp,
                 "",
-                accountId,
+                "85599204681",
                 payload,
                 "Request");
     }

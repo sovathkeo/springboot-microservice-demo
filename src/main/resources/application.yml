@@ -4,16 +4,16 @@ spring:
     url: 'jdbc:sqlserver://localhost:1433;databaseName=demo;trustServerCertificate=true'
     username: sa
     password: M$Dem0Dotne!
-  config:
-    import: optional:configserver:http://localhost:8889
-  cloud:
-    config:
-      enabled: false
-      username: ADMIN
-      password: 123
-      label: main
-    discovery:
-      enabled: true
+#  config:
+#    import: optional:configserver:http://localhost:8889
+#  cloud:
+#    config:
+#      enabled: false
+#      username: ADMIN
+#      password: 123
+#      label: main
+#    discovery:
+#      enabled: true
   application:
     name: microservice-template
 
