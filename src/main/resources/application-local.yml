@@ -51,7 +51,7 @@ logging:
     org:
       springframework:
         boot: OFF
-        web: DEBUG
+        web: OFF
 
   pattern:
     date-format: yyyy-dd-MM HH:mm:ss.SSS

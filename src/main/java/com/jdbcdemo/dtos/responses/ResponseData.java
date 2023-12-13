@@ -1,9 +1,11 @@
 package com.jdbcdemo.dtos.responses;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
-@JsonPropertyOrder(value = {"error_code", "error_message","error_description"})
+@JsonPropertyOrder(value = {"error_code", "error_message","error_description", "additional_data"})
 public class ResponseData {
     @JsonProperty("error_code")
     String errorCode;
@@ -11,6 +13,9 @@ public class ResponseData {
     String errorMessage;
     @JsonProperty("error_description")
     String errorDescription;
+
+    @JsonProperty("additional_data")
+    Object additionalData;
 
     ResponseData() {
         errorCode = "0000";
@@ -34,11 +39,9 @@ public class ResponseData {
         return new ResponseData();
     }
 
-    public static ResponseData success(ResponseData customResponseData) {
-        customResponseData.errorCode = "0000";
-        customResponseData.errorMessage = "success";
-        customResponseData.errorDescription = "success";
-        return customResponseData;
+    public static ResponseData success(Object additionalData) {
+
+        return ResponseData.success(additionalData);
     }
 
     public static ResponseData success(String errorMessage) {

@@ -5,12 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jdbcdemo.common.alerts.TelegramBot;
 import com.jdbcdemo.common.exceptions.models.ApplicationException;
 import com.jdbcdemo.common.exceptions.models.ApplicationRuntimeException;
+import com.jdbcdemo.common.logging.ApplicationLogging;
 import com.jdbcdemo.dtos.responses.Response;
 import com.jdbcdemo.services.tracing.CorrelationService;
 import jakarta.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -30,6 +32,10 @@ import java.util.Optional;
 public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler {
 
     private final Logger logger = LoggerFactory.getLogger(ApplicationExceptionHandler.class);
+
+    @Autowired
+    @Qualifier("applicationLogging")
+    private ApplicationLogging appLogger;
 
     @Autowired
     private ObjectMapper mapper;
@@ -82,16 +88,23 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
     }
 
     private ResponseEntity<Object> handleApplicationException(
+
         Exception ex,
         WebRequest request) throws JsonProcessingException{
         var e = tryGetApplicationException(ex);
         HttpStatusCode statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
         var originalError = tryGetOriginalErrorMessage(ex);
-
+        if (e.isEmpty()) {
+            originalError = ex.getMessage();
+        }
         var body = Response.failure(statusCode.toString(), originalError, "something went wrong", correlationService);
 
         var bodyString = mapper.writeValueAsString(body);
-        logger.error(bodyString, e);
+
+        appLogger.setUnexpectedErrorLogParams("failed", statusCode.toString(), originalError);
+        appLogger.logInfo();
+
+        logger.error(bodyString, ex);
 
         telegramBot.sendMessageAsync(body);
 

@@ -1,6 +1,7 @@
 package com.jdbcdemo.common.helper.logging;
 
 import com.jdbcdemo.common.helper.StringHelper;
+import com.jdbcdemo.common.logging.ApplicationLogger;
 import com.jdbcdemo.common.shareobject.ShareObject;
 import com.jdbcdemo.common.wrapper.DateTimeWrapper;
 import com.jdbcdemo.services.tracing.CorrelationService;
@@ -12,7 +13,7 @@ import java.util.Map;
 
 @AllArgsConstructor
 @NoArgsConstructor(force = true)
-public class ApplicationLog extends ShareObject {
+public class ApplicationLog extends ShareObject implements ApplicationLogger {
 
     private final String logMessage = "action = , "
             .concat("service_name = , ")
@@ -134,6 +135,8 @@ public class ApplicationLog extends ShareObject {
             { put(LogFormatterKeyHelper.account_id.getKey(), accountId); }
             { put(LogFormatterKeyHelper.action.getKey(), action); }
             { put(LogFormatterKeyHelper.result.getKey(), result); }
+            { put(LogFormatterKeyHelper.error_code.getKey(), errorCode); }
+            { put(LogFormatterKeyHelper.error_message.getKey(), errorMessage); }
             { put(LogFormatterKeyHelper.payload.getKey(), payload); }
             { put(LogFormatterKeyHelper.step.getKey(), step); }
             { put(LogFormatterKeyHelper.nei.getKey(), nei); }
@@ -141,7 +144,14 @@ public class ApplicationLog extends ShareObject {
         };
     }
 
-    public void setLogParams(String action, String step, String nei, String result, String api, String errorCode, String errorMessage){
+    @Override
+    public void setLogParams(String action,
+                             String step,
+                             String nei,
+                             String result,
+                             String api,
+                             String errorCode,
+                             String errorMessage){
         this.action = StringHelper.getValueOrEmpty(action);
         this.step = StringHelper.getValueOrEmpty(step);
         this.nei = StringHelper.getValueOrEmpty(nei);
@@ -151,6 +161,7 @@ public class ApplicationLog extends ShareObject {
         this.errorMessage = StringHelper.getValueOrEmpty(errorMessage);
     }
 
+    @Override
     public void setRequestLogParams(String step, String nei, String api){
         this.action = "Request";
         this.step = StringHelper.getValueOrEmpty(step);
@@ -160,6 +171,29 @@ public class ApplicationLog extends ShareObject {
         this.errorCode = "";
         this.errorMessage = "";
     }
+
+    @Override
+    public void setResponseLogParams(String step, String nei, String api, String result, String errorCode, String errorMessage){
+        this.action = "Response";
+        this.step = StringHelper.getValueOrEmpty(step);
+        this.nei = StringHelper.getValueOrEmpty(nei);
+        this.result = StringHelper.getValueOrEmpty(result);
+        this.api = StringHelper.getValueOrEmpty(api);
+        this.errorCode = StringHelper.getValueOrEmpty(errorCode);
+        this.errorMessage = StringHelper.getValueOrEmpty(errorMessage);
+    }
+
+    public void setLastResponseLogParams(String step, String nei, String api, String result, String errorCode, String errorMessage){
+        this.action = "response";
+        this.step = StringHelper.getValueOrEmpty(step);
+        this.nei = StringHelper.getValueOrEmpty(nei);
+        this.result = StringHelper.getValueOrEmpty(result);
+        this.api = StringHelper.getValueOrEmpty(api);
+        this.errorCode = StringHelper.getValueOrEmpty(errorCode);
+        this.errorMessage = StringHelper.getValueOrEmpty(errorMessage);
+    }
+
+
 
     public String getLogMessage() {
         String logMessageTmp = this.logMessage;

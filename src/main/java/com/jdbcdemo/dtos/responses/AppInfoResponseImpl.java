@@ -6,6 +6,6 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class AppInfoResponseImpl extends ResponseData {
+public class AppInfoResponseImpl {
     private ApplicationConfiguration appSetting;
 }

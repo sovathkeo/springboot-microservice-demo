@@ -1,6 +1,7 @@
 package com.jdbcdemo.services.ocs.queries;
 
 import com.jdbcdemo.common.configurations.appsetting.ApplicationConfiguration;
+import com.jdbcdemo.common.logging.ApplicationLogging;
 import com.jdbcdemo.common.wrapper.UuidWrapper;
 import com.jdbcdemo.common.wrapper.WebClientWrapper;
 import com.jdbcdemo.models.ocs.OcsQueryAccountResponseModel;
@@ -9,6 +10,7 @@ import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -18,6 +20,11 @@ import java.util.Optional;
 
 @Service
 public class OcsQueryServiceImpl  implements OcsQueryService {
+
+    @Autowired
+    @Qualifier("applicationLogging")
+    ApplicationLogging appLogger;
+
 
     final Logger logger = LoggerFactory.getLogger(OcsQueryServiceImpl.class);
     @Autowired
@@ -35,6 +42,9 @@ public class OcsQueryServiceImpl  implements OcsQueryService {
 
     @Override
     public Mono<Optional<OcsQueryAccountResponseModel>> querySubscriberAccount(String accountId ) {
+
+        appLogger.setRequestLogParams("2","ocs", "query-subscriber");
+        appLogger.logInfo();
 
         var payload = OcsPayloadModel.querySubscriberAccount(UuidWrapper.uuidAsString(), accountId);
         var response = webClient

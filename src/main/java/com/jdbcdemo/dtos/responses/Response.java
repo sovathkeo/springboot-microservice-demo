@@ -18,9 +18,16 @@ public class Response {
         this.data = ResponseData.success();
     }
 
-    protected Response(ResponseData cusomResponseData, CorrelationService correlationService) {
+    protected Response(Object additionalData, CorrelationService correlationService) {
         this.meta = ResponseMeta.buildMeta(correlationService);
-        this.data = ResponseData.success(cusomResponseData);
+        this.data = ResponseData.success();
+        this.data.additionalData = additionalData;
+    }
+
+    protected Response(String errorMessage, Object additionalData, CorrelationService correlationService) {
+        this.meta = ResponseMeta.buildMeta(correlationService);
+        this.data = ResponseData.success(errorMessage);
+        this.data.additionalData = additionalData;
     }
 
     protected Response(String errorMessage) {
@@ -28,14 +35,19 @@ public class Response {
         this.data = ResponseData.success(errorMessage);
     }
 
-    protected Response(String errorMessage, String correlationId) {
-        this.meta = ResponseMeta.buildMeta(correlationId);
+    protected Response(String errorMessage, CorrelationService correlationService) {
+        this.meta = ResponseMeta.buildMeta(correlationService);
         this.data = ResponseData.success(errorMessage);
     }
 
 
     protected Response(String errorCode, String errorMessage, String errorDescription, String correlationId) {
         this.meta = ResponseMeta.buildMeta(correlationId);
+        this.data = ResponseData.failed(errorCode, errorMessage, errorDescription);
+    }
+
+    protected Response(String errorCode, String errorMessage, String errorDescription, CorrelationService correlationService) {
+        this.meta = ResponseMeta.buildMeta(correlationService);
         this.data = ResponseData.failed(errorCode, errorMessage, errorDescription);
     }
 
@@ -49,27 +61,34 @@ public class Response {
     }
 
     public static Response success(
-            ResponseData customResponseData,
+            Object additionalData,
             CorrelationService correlationService) {
-        return new Response(customResponseData, correlationService);
+        return new Response(additionalData, correlationService);
+    }
+
+    public static Response success(
+        String errorMessage,
+        Object additionalData,
+        CorrelationService correlationService) {
+        return new Response(errorMessage, additionalData, correlationService);
     }
 
     public static Response success(String errorMessage) {
         return new Response(errorMessage);
     }
 
-    public static Response success(String errorMessage, String correlationId) {
-        return new Response(errorMessage, correlationId);
+    public static Response success(String errorMessage, CorrelationService correlationService) {
+        return new Response(errorMessage, correlationService);
     }
 
     // Start build failed response
 
-    public static Response failure(String errorCode, String errorMessage, String errorDescription, String correlationId) {
-        return new Response(errorCode, errorMessage, errorDescription, correlationId);
+    public static Response failure(String errorCode, String errorMessage, String errorDescription, CorrelationService correlationService) {
+        return new Response(errorCode, errorMessage, errorDescription, correlationService);
     }
 
-    public static Response failure( String errorCode, String errorMessage, String errorDescription, CorrelationService correlationService ) {
-        return new Response(errorCode, errorMessage, errorDescription, correlationService.getCorrelationId(), correlationService.getRequestId());
+    public static Response failure(String errorCode, String errorMessage, String errorDescription, String correlationId) {
+        return new Response(errorCode, errorMessage, errorDescription, correlationId);
     }
 
     // End build failed response

@@ -38,6 +38,7 @@ public class BaseController {
     public Response mediate(CommandWrapper command ) {
 
         initializeLogParams(command, this.request , HttpRequestHelper.getBodyAsString(this.request));
+
         logger.info(applicationLog.getLogMessage());
 
         shareService.setObject(applicationLog);
@@ -66,5 +67,32 @@ public class BaseController {
             command.accountId,
             payload,
             correlationService );
+    }
+
+    protected void initializeApplicationLogging(
+        HttpServletRequest request,
+        String methodName,
+        String accountId,
+        String requestPlan,
+        String channel,
+        String payload) {
+
+        final String serviceName = appSetting.getApplicationName();
+
+        String clientIp = request.getHeader(HttpHeaderConstant.X_FORWARDED_FOR);
+
+        if(clientIp == null) clientIp = request.getRemoteUser();
+
+        applicationLog.initLogParams(
+            serviceName,
+            methodName,
+            requestPlan,
+            clientIp,
+            channel,
+            accountId,
+            payload,
+            correlationService );
+
+        shareService.setObject(applicationLog);
     }
 }

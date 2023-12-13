@@ -3,6 +3,7 @@ package com.jdbcdemo.controllers.app;
 import com.jdbcdemo.controllers.base.BaseController;
 import com.jdbcdemo.dtos.responses.Response;
 import com.jdbcdemo.features.app.queries.GetAppInfoQuery;
+import com.jdbcdemo.features.config.query.GetConfigQuery;
 import com.jdbcdemo.services.ocs.base.OcsServiceImpl;
 import com.jdbcdemo.services.tracing.CorrelationService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,6 +25,7 @@ public class ApplicationController extends BaseController {
     @Autowired
     CorrelationService correlationService;
 
+
     protected ApplicationController(@Autowired HttpServletRequest request) {
         super(request);
     }
@@ -36,7 +38,10 @@ public class ApplicationController extends BaseController {
     }
 
     @GetMapping("test")
-    public ResponseEntity<Object> test() {
+    public ResponseEntity<Object> test(@Autowired HttpServletRequest request) {
+
+        super.initializeApplicationLogging(request, "test","85599204681","","CCApp","");
+
         var result = ocsService
                 .query
                 .querySubscriberAccount("85599204681")
@@ -45,13 +50,14 @@ public class ApplicationController extends BaseController {
         if (Objects.requireNonNull(result).isEmpty() ) {
             return ResponseEntity.internalServerError().build();
         }
-        return ResponseEntity.ok(Response.success("success", correlationService.getCorrelationId()));
+
+        return ResponseEntity.ok(Response.success("success", correlationService));
     }
 
-    @GetMapping("test-subscribe")
-    public ResponseEntity<Object> testSubscribe() {
-        var result = ocsService.subscribe.subscribeBundle("85599204681", "test");
-        throw new RuntimeException("test ex");
-        //return ResponseEntity.ok(Response.success("", correlationService.getCorrelationId()));
+    @GetMapping("get-config")
+    public Response testConfig() {
+       return mediate(new GetConfigQuery("test-config", ""));
     }
+
+
 }
