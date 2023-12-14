@@ -12,13 +12,16 @@ import java.util.concurrent.Executor;
 @EnableAsync
 public class AsyncConfiguration implements AsyncConfigurer {
 
+
+
+    @Override
     @Bean
     public Executor getAsyncExecutor()  {
 
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(10);
-        executor.setMaxPoolSize(1000);
-        executor.setQueueCapacity(500);
+        executor.setCorePoolSize(100);
+        executor.setMaxPoolSize(5000);
+        executor.setQueueCapacity(10000);
         executor.setThreadNamePrefix("Async-");
         executor.initialize();
 

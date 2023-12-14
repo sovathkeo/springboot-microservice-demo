@@ -1,37 +1,73 @@
 package com.jdbcdemo.features.kafkaconsumer;
 
-import com.google.gson.Gson;
 import com.jdbcdemo.common.logging.ApplicationLogging;
-import com.jdbcdemo.models.kafka.KafkaTopUpModel;
+import com.jdbcdemo.common.wrapper.AsyncOperationWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaHandler;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
+import reactor.core.publisher.Mono;
 
 @Component
 @KafkaListener(topics = "${spring.kafka.topic-name}", groupId = "${spring.kafka.group-id}")
 public class KafkaConsumerTopUpEvent extends ApplicationLogging {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    @KafkaHandler
-    //@Async
-    private void handler1(String message) {
-        this.handleAsync(message);
+    @Autowired
+    private RestTemplate restTemplate;
+
+    private final AsyncOperationWrapper asyncOperationWrapper;
+
+    @Autowired
+    public KafkaConsumerTopUpEvent( AsyncOperationWrapper asyncOperationWrapper ) {
+        this.asyncOperationWrapper = asyncOperationWrapper;
     }
 
-    @Async
-    public void handleAsync(String message){
+    @KafkaHandler
+    private void handler(String message) {
         final Logger logger = LoggerFactory.getLogger(this.getClass());
-        var logMessage = String.format("==> consumed", message);
-        var topup = new Gson().fromJson(message, KafkaTopUpModel.class);
-        //var logMessage = String.format("==> consumed message, accountId = %s", topup.getAccountId());
+        var logMsg = String.format("==> consumed, value = %s, completed handler", message);
+
+        //asyncOperationWrapper.executeAsync(this::doAsync);
+        //doWork(message);
+
+        //doWorkBlocking(message);
+
+        doWorkReactor(message);
+
+        logger.info(logMsg);
+    }
+
+
+    public void doAsync( ) {
+        final Logger logger = LoggerFactory.getLogger(this.getClass());
+        var logMsg = String.format("==> consumed, value = %s", 123);
+        logger.info(logMsg);
+    }
+
+    public Mono<Integer> doWorkReactor( Object value) {
+        final Logger logger = LoggerFactory.getLogger(this.getClass());
+        var logMsg = String.format("==> consumed, value = %s, blocking!", value);
+        logger.info(logMsg);
+
+        var uri = "https://1923102e-5682-461a-b116-7be17112de16.mock.pstmn.io/delay";
+        restTemplate.getForObject(uri, String.class);
+
+        var l = String.format("==> consumed, value = %s, blocking completed", value);
+        logger.info(l);
+        return Mono.empty();
+    }
+
+    public void doWorkBlocking( String value) {
+        final Logger logger = LoggerFactory.getLogger(this.getClass());
+        var logMsg = String.format("==> consumed, value = %s, blocking!", value);
+        logger.info(logMsg);
         try {
-            Thread.sleep(3);
+            Thread.sleep(15000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        logger.info(logMessage);
     }
 }

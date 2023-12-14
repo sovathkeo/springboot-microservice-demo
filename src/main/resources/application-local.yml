@@ -19,9 +19,9 @@ spring:
     log-request-details: true
 
   kafka:
-    bootstrap-servers: prd-kaf1.cellcard.com.kh:9092,prd-kaf2.cellcard.com.kh:9092,prd-kaf3.cellcard.com.kh:9092
+    bootstrap-servers: localhost:9092
     group-id: sovath-test-1
-    topic-name: WINGBANK_TREASURE_TOPUP
+    topic-name: test-1
 
 server:
   port: 8081
@@ -60,7 +60,7 @@ logging:
 
   pattern:
     date-format: yyyy-dd-MM HH:mm:ss.SSS
-    console: '%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%-0.30t] %-38X{X-CorrelationId:-empty-correlation} %-40logger{0} : %msg%n'
+    console: '%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%-20.20thread] %-38X{X-CorrelationId:-00000000-0000-0000-0000-000000000000} %-30.30logger{0} : %msg%n'
 
 application-config:
   microservices:
