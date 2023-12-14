@@ -2,8 +2,7 @@ package com.jdbcdemo.common.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jdbcdemo.common.constant.HttpHeaderConstant;
-import com.jdbcdemo.common.exceptions.models.ApplicationError;
-import com.jdbcdemo.dtos.responses.Response;
+import com.jdbcdemo.models.responses.Response;
 import com.jdbcdemo.services.tracing.CorrelationService;
 import jakarta.annotation.Nullable;
 import jakarta.servlet.FilterChain;

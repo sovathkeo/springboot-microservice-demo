@@ -1,4 +1,4 @@
-package com.jdbcdemo.dtos.responses;
+package com.jdbcdemo.models.responses;
 
 public class ResponseAdditionalData {
 }

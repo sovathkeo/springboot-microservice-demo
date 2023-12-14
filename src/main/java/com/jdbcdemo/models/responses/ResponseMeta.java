@@ -1,4 +1,4 @@
-package com.jdbcdemo.dtos.responses;
+package com.jdbcdemo.models.responses;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.jdbcdemo.common.wrapper.DateTimeWrapper;

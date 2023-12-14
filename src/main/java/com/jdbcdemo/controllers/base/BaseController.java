@@ -6,7 +6,7 @@ import com.jdbcdemo.common.constant.HttpHeaderConstant;
 import com.jdbcdemo.common.helper.HttpRequestHelper;
 import com.jdbcdemo.common.helper.logging.ApplicationLog;
 import com.jdbcdemo.common.wrapper.CommandWrapper;
-import com.jdbcdemo.dtos.responses.Response;
+import com.jdbcdemo.models.responses.Response;
 import com.jdbcdemo.services.shareservice.ShareServiceImpl;
 import com.jdbcdemo.services.tracing.CorrelationService;
 import jakarta.servlet.http.HttpServletRequest;

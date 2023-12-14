@@ -1,4 +1,4 @@
-package com.jdbcdemo.dtos.responses;
+package com.jdbcdemo.models.responses;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

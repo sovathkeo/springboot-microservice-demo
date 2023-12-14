@@ -1,7 +1,7 @@
 package com.jdbcdemo.common.wrapper;
 
 import an.awesome.pipelinr.Command;
-import com.jdbcdemo.dtos.responses.Response;
+import com.jdbcdemo.models.responses.Response;
 import jakarta.annotation.Nullable;
 import lombok.Getter;
 import lombok.Setter;

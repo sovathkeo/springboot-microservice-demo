@@ -6,7 +6,7 @@ import com.jdbcdemo.common.alerts.TelegramBot;
 import com.jdbcdemo.common.exceptions.models.ApplicationException;
 import com.jdbcdemo.common.exceptions.models.ApplicationRuntimeException;
 import com.jdbcdemo.common.logging.ApplicationLogging;
-import com.jdbcdemo.dtos.responses.Response;
+import com.jdbcdemo.models.responses.Response;
 import com.jdbcdemo.services.tracing.CorrelationService;
 import jakarta.annotation.Nullable;
 import org.slf4j.Logger;

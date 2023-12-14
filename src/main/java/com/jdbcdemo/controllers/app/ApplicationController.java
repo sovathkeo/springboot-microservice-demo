@@ -1,7 +1,7 @@
 package com.jdbcdemo.controllers.app;
 
 import com.jdbcdemo.controllers.base.BaseController;
-import com.jdbcdemo.dtos.responses.Response;
+import com.jdbcdemo.models.responses.Response;
 import com.jdbcdemo.features.app.queries.GetAppInfoQuery;
 import com.jdbcdemo.features.config.query.GetConfigQuery;
 import com.jdbcdemo.services.ocs.base.OcsServiceImpl;

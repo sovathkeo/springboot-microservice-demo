@@ -6,7 +6,7 @@ import com.jdbcdemo.common.constant.HttpHeaderConstant;
 import com.jdbcdemo.common.security.authprovider.apikeyauth.ApiKeyAuthentication;
 import com.jdbcdemo.common.security.authprovider.basicauth.BasicAuthentication;
 import com.jdbcdemo.common.security.authprovider.bearerauth.BearerAuthentication;
-import com.jdbcdemo.dtos.responses.Response;
+import com.jdbcdemo.models.responses.Response;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

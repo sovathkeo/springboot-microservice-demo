@@ -36,6 +36,9 @@ public class ApplicationLogging implements ApplicationLogger {
         initApplicationLogging();
     }
 
+    public void logInfo(String logMessage){
+        logger.info(logMessage);
+    }
     public void logInfo(){
         logger.info(this.applicationLog.getLogMessage());
     }
