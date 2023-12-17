@@ -1,4 +1,4 @@
-package com.jdbcdemo.common.configurations;
+package com.jdbcdemo.common.configurations.async;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

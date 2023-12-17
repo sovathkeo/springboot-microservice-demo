@@ -6,9 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.ExchangeFilterFunctions;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+
+import java.util.Optional;
 
 @Component
 public class WebClientWrapper {
@@ -39,6 +42,7 @@ public class WebClientWrapper {
             .build()
             .get()
             .uri(url)
+                .accept(MediaType.APPLICATION_JSON)
             .retrieve()
             .toEntity(Object.class)
             .block();
@@ -50,7 +54,8 @@ public class WebClientWrapper {
             .get()
             .uri(url)
             .retrieve()
-            .toEntity(Object.class);
+            .toEntity(Object.class)
+        ;
     }
 
     public ResponseEntity<?> post(String url, Object payload) {

@@ -1,5 +1,4 @@
 spring:
-
   config:
     import: configserver:http://localhost:8888
 
@@ -9,7 +8,7 @@ spring:
       username: ADMIN
       password: 123
       label: main
-      profiles: prod
+      profiles: dev
 
   application:
     name: "ms-api-boilerplate"

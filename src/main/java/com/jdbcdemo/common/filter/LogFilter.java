@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class LogFilter extends OncePerRequestFilter {
-
     @Autowired
     private ApplicationConfiguration appSetting;
     @Autowired

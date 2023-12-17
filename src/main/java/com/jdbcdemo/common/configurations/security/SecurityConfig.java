@@ -1,8 +1,9 @@
-package com.jdbcdemo.common.configurations;
+package com.jdbcdemo.common.configurations.security;
 
 import com.jdbcdemo.common.filter.AuthenticationFilter;
 import com.jdbcdemo.common.filter.ExceptionFilter;
 import com.jdbcdemo.common.filter.LogFilter;
+import com.jdbcdemo.common.filter.MaintenanceModeFilter;
 import com.jdbcdemo.common.security.authprovider.apikeyauth.ApiKeyAuthenticationProvider;
 import com.jdbcdemo.common.security.authprovider.basicauth.BasicAuthenticationProvider;
 import com.jdbcdemo.common.security.authprovider.bearerauth.BearerAuthenticationProvider;
@@ -37,6 +38,7 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .sessionManagement(x -> x.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authenticationManager(authenticationManager())
+            .addFilterBefore(new MaintenanceModeFilter(), UsernamePasswordAuthenticationFilter.class)
             .addFilterBefore(new ExceptionFilter(), UsernamePasswordAuthenticationFilter.class)
             .addFilterBefore(new LogFilter(), UsernamePasswordAuthenticationFilter.class);
 

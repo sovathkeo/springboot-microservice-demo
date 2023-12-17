@@ -1,4 +1,4 @@
-package com.jdbcdemo.common.configurations;
+package com.jdbcdemo.common.configurations.interceptor;
 
 import com.jdbcdemo.common.interceptor.InitializeRequestInterceptor;
 import jakarta.annotation.Nullable;

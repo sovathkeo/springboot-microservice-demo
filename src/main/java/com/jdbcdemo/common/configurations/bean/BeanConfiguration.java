@@ -1,10 +1,11 @@
-package com.jdbcdemo.common.configurations;
+package com.jdbcdemo.common.configurations.bean;
 
 import com.jdbcdemo.common.interceptor.ExchangeInterceptorFunctions;
 import com.jdbcdemo.common.interceptor.RestTemplateAddHeaderInterceptor;
 import com.jdbcdemo.common.wrapper.WebClientWrapper;
 import com.jdbcdemo.services.tracing.CorrelationService;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +16,9 @@ import java.util.Collections;
 
 @Configuration
 public class BeanConfiguration {
+
+    @Value("${spring.datasource.url}")
+    String dbUrl;
 
     @Bean
     public ModelMapper modelMapper() {

@@ -1,68 +1,15 @@
 spring:
-  datasource:
-    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-    url: 'jdbc:sqlserver://localhost:1433;databaseName=demo;trustServerCertificate=true'
-    username: sa
-    password: M$Dem0Dotne!
-    hikari:
-      connection-timeout: 3000
+
+  config:
+    import: configserver:http://localhost:8888
+
   cloud:
     config:
-      enabled: false
+      enabled: true
       username: ADMIN
       password: 123
       label: main
+      profiles: local
+
   application:
-    name: "WingBank Treasure Hunt"
-
-  mvc:
-    log-request-details: true
-
-  kafka:
-    bootstrap-servers: localhost:9092
-    group-id: sovath-test-1
-    topic-name: test-1
-
-server:
-  port: 8081
-
-jpa:
-  hibernate:
-    ddl-auto: update
-  show-sql: false
-  properties:
-    hibernate:
-      format_sql: true
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: '*'
-  security:
-    enabled: false
-  info:
-    env:
-      enabled: true
-
-  endpoint:
-    health:
-      show-details: always
-  shutdown:
-    enabled: true
-
-logging:
-  level:
-    org:
-      springframework:
-        boot: OFF
-        web: OFF
-
-  pattern:
-    date-format: yyyy-dd-MM HH:mm:ss.SSS
-    console: '%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%-20.20thread] %-38X{X-CorrelationId:-00000000-0000-0000-0000-000000000000} %-30.30logger{0} : %msg%n'
-
-application-config:
-  microservices:
-    ocs-service:
-      base-url: "https://prd-apiserver.camgsm.com.kh/services/surepay"
+    name: "ms-api-boilerplate"

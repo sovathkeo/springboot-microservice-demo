@@ -8,6 +8,7 @@ import com.jdbcdemo.common.constant.HttpHeaderConstant;
 import com.jdbcdemo.common.constant.SystemEnvironmentConstant;
 import com.jdbcdemo.common.constant.SystemPropertyNameConstant;
 import com.jdbcdemo.common.helper.StringHelper;
+import com.jdbcdemo.common.helper.exception.ExceptionHelper;
 import com.jdbcdemo.common.registration.RegisterService;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
@@ -18,8 +19,10 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.servers.Server;
 import jakarta.annotation.PostConstruct;
+import org.apache.kafka.common.KafkaException;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -42,17 +45,9 @@ import java.util.UUID;
 public class Application {
     private static final String DEFAULT_CONFIG_FILE = "application";
     public static void main(String[] args) {
-
-        try {
-            MDC.put(HttpHeaderConstant.CORRELATION_ID, new UUID(0L, 0L).toString());
-
-            System.setProperty(SystemPropertyNameConstant.SPRING_CONFIG_NAME, buildConfigFile());
-
-            SpringApplication.run(Application.class, args);
-        } catch (Exception e) {
-            throw e;
-        }
-
+        MDC.put(HttpHeaderConstant.CORRELATION_ID, new UUID(0L, 0L).toString());
+        System.setProperty(SystemPropertyNameConstant.SPRING_CONFIG_NAME, buildConfigFile());
+        SpringApplication.run(Application.class, args);
     }
 
     private static String buildConfigFile() {
