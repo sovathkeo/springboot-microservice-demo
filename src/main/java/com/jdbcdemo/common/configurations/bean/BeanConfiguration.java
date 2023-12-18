@@ -27,7 +27,6 @@ public class BeanConfiguration {
 
     @Bean
     public RestTemplate restTemplate( RestTemplateBuilder builder, RestTemplateAddHeaderInterceptor restTemplateAddHeaderInterceptor) {
-
         var restTemplate = builder
             .build();
 

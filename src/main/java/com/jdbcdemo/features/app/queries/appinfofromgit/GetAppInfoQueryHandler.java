@@ -1,4 +1,4 @@
-package com.jdbcdemo.features.app.queries;
+package com.jdbcdemo.features.app.queries.appinfofromgit;
 
 import com.jdbcdemo.common.configurations.appsetting.ApplicationConfiguration;
 import com.jdbcdemo.common.logging.ApplicationLogging;

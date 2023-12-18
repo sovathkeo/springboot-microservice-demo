@@ -1,12 +1,16 @@
 package com.jdbcdemo.controllers.app;
 
 import com.jdbcdemo.controllers.base.BaseController;
+import com.jdbcdemo.features.app.queries.appinfofromdb.GetAppInfoFromDbQuery;
+import com.jdbcdemo.models.notification.sms.SmsNotificationRequestModel;
 import com.jdbcdemo.models.responses.Response;
-import com.jdbcdemo.features.app.queries.GetAppInfoQuery;
+import com.jdbcdemo.features.app.queries.appinfofromgit.GetAppInfoQuery;
 import com.jdbcdemo.features.config.query.GetConfigQuery;
+import com.jdbcdemo.services.notification.NotificationService;
 import com.jdbcdemo.services.ocs.base.OcsServiceImpl;
 import com.jdbcdemo.services.tracing.CorrelationService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.QueryParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +29,8 @@ public class ApplicationController extends BaseController {
     @Autowired
     CorrelationService correlationService;
 
+    @Autowired
+    NotificationService notificationService;
 
     protected ApplicationController(@Autowired HttpServletRequest request) {
         super(request);
@@ -34,6 +40,12 @@ public class ApplicationController extends BaseController {
     @GetMapping("/info")
     public Response getAppInfo() {
         var req = new GetAppInfoQuery("get-app-info");
+        return mediate(req);
+    }
+
+    @GetMapping("/info-db")
+    public Response getAppInfoFromDb() {
+        var req = new GetAppInfoFromDbQuery();
         return mediate(req);
     }
 
@@ -59,5 +71,11 @@ public class ApplicationController extends BaseController {
        return mediate(new GetConfigQuery("test-config", ""));
     }
 
+
+    @GetMapping("push-sms")
+    public Response pushSms(@QueryParam("account_id") String account_id, @QueryParam("message") String message){
+        notificationService.sms.push(new SmsNotificationRequestModel("Cellcard", account_id,message, "123"));
+        return Response.success();
+    }
 
 }

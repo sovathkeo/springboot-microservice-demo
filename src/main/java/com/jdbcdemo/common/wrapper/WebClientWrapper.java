@@ -64,10 +64,22 @@ public class WebClientWrapper {
             .build()
             .post()
             .uri(url)
+                .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(payload)
             .retrieve()
             .toEntity(Object.class)
             .block();
+    }
+
+    public Mono<ResponseEntity<String>> postJsonAsync(String url, Object payload) {
+        return  webClientBuilder
+                .build()
+                .post()
+                .uri(url)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(payload)
+                .retrieve()
+                .toEntity(String.class);
     }
 
     public Mono<ResponseEntity<String>> postXmlAsync(String url, Object payload) {

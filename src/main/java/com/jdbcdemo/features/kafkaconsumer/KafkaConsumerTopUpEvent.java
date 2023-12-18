@@ -28,8 +28,7 @@ public class KafkaConsumerTopUpEvent extends ApplicationLogging {
 
     @KafkaHandler
     private void handler(String message) {
-        //asyncOperationWrapper.executeAsync(message, this::doAsync);
-        unlimitedThread(message);
+        asyncOperationWrapper.executeAsync(message, this::doAsync);
     }
 
 
@@ -59,24 +58,5 @@ public class KafkaConsumerTopUpEvent extends ApplicationLogging {
         var l = String.format("==> consumed, value = %s, blocking completed", value);
         logger.info(l);
         return Mono.empty();
-    }
-
-    public void doWorkBlocking( String value) {
-        final Logger logger = LoggerFactory.getLogger(this.getClass());
-        var logMsg = String.format("==> consumed, value = %s, blocking!", value);
-        logger.info(logMsg);
-        try {
-            Thread.sleep(15000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void unlimitedThread(Object value) {
-        new Thread(() -> {
-            final Logger logger = LoggerFactory.getLogger(this.getClass());
-            var logMsg = String.format("==> consumed, value = %s", value);
-            logger.info(logMsg);
-        }).start();
     }
 }

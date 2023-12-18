@@ -36,7 +36,7 @@ public class ApplicationConfiguration {
 
     @Getter
     @Setter
-    private MicroservicesConfig microservices;
+    public MicroservicesConfig microservices;
 
     public String[] getEndpointsAuthWhitelist() {
         return endpointsAuthWhitelist;

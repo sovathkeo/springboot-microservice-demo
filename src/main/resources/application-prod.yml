@@ -1,7 +1,7 @@
 spring:
 
   config:
-    import: configserver:http://configserver-svc:8888
+    import: configserver:http://localhost:8888
 
   cloud:
     config:
