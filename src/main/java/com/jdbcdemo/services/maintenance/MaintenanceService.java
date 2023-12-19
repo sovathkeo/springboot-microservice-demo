@@ -15,6 +15,9 @@ public class MaintenanceService {
     }
 
     private boolean isMaintenanceModeOn() {
+        if (appSetting.globalConfig == null) {
+            return appSetting.maintenanceMode.equalsIgnoreCase(MAINTENANCE_MODE_ON);
+        }
         return appSetting.globalConfig.maintenanceMode.equalsIgnoreCase(MAINTENANCE_MODE_ON)
                 || appSetting.maintenanceMode.equalsIgnoreCase(MAINTENANCE_MODE_ON);
     }

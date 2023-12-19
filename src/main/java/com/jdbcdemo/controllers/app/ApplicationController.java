@@ -1,11 +1,13 @@
 package com.jdbcdemo.controllers.app;
 
+import com.jdbcdemo.common.wrapper.UuidWrapper;
 import com.jdbcdemo.controllers.base.BaseController;
 import com.jdbcdemo.features.app.queries.appinfofromdb.GetAppInfoFromDbQuery;
-import com.jdbcdemo.models.notification.sms.SmsNotificationRequestModel;
-import com.jdbcdemo.models.responses.Response;
 import com.jdbcdemo.features.app.queries.appinfofromgit.GetAppInfoQuery;
 import com.jdbcdemo.features.config.query.GetConfigQuery;
+import com.jdbcdemo.models.notification.sms.SmsNotificationRequestModel;
+import com.jdbcdemo.models.responses.Response;
+import com.jdbcdemo.services.caching.CachingService;
 import com.jdbcdemo.services.notification.NotificationService;
 import com.jdbcdemo.services.ocs.base.OcsServiceImpl;
 import com.jdbcdemo.services.tracing.CorrelationService;
@@ -18,19 +20,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("applications")
 public class ApplicationController extends BaseController {
-
     @Autowired
     OcsServiceImpl ocsService;
-
     @Autowired
     CorrelationService correlationService;
-
     @Autowired
     NotificationService notificationService;
+
+    @Autowired
+    CachingService cachingService;
 
     protected ApplicationController(@Autowired HttpServletRequest request) {
         super(request);
@@ -39,7 +42,10 @@ public class ApplicationController extends BaseController {
 
     @GetMapping("/info")
     public Response getAppInfo() {
+        cachingService.setString("TEST:test", UuidWrapper.uuidAsString(), 30, TimeUnit.SECONDS);
         var req = new GetAppInfoQuery("get-app-info");
+        var cachedValue = cachingService.getString("TEST:test");
+        System.out.println("==> cached value = " + cachedValue.get());
         return mediate(req);
     }
 

@@ -1,11 +1,10 @@
 spring:
-
   config:
     import: configserver:http://localhost:8888
 
   cloud:
     config:
-      enabled: true
+      enabled: false
       username: ADMIN
       password: 123
       label: main

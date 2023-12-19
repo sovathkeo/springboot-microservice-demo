@@ -25,6 +25,7 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableAsync;
 
@@ -32,6 +33,7 @@ import java.util.UUID;
 
 @SpringBootApplication
 @EnableAsync(proxyTargetClass = true)
+@EnableCaching
 @SecurityScheme(type = SecuritySchemeType.APIKEY, name = "X-API-KEY", in = SecuritySchemeIn.HEADER)
 @OpenAPIDefinition(
     info = @Info(

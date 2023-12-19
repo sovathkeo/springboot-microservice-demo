@@ -15,16 +15,16 @@ import java.time.Duration;
 
 @Configuration
 public class RedisConfiguration {
-    @Value("${spring.data.redis.host:localhost}")
+    @Value("${spring.redis.host:localhost}")
     private String REDIS_HOST;
 
-    @Value("${spring.data.redis.port:6379}")
+    @Value("${spring.redis.port:6379}")
     private String REDIS_PORT;
 
-    @Value("${spring.data.redis.password:admin}")
+    @Value("${spring.redis.password:admin}")
     private String REDIS_PASSWORD;
 
-    @Value("${spring.data.redis.timeout:5000}")
+    @Value("${spring.redis.timeout:5000}")
     private String REDIS_TIMEOUT;
 
     @Bean

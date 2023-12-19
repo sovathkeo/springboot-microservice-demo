@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.jdbcdemo.services.tracing.CorrelationService;
 
+import java.io.Serializable;
+
 
 @JsonIgnoreProperties(value = {"$$beanFactory"})
 public class Response {
