@@ -1,6 +1,6 @@
 spring:
   config:
-    import: configserver:http://localhost:8888
+    import: configserver:${CONFIG_SERVER_URL:https://dev-apiserver.camgsm.com.kh/config-server/v1}
 
   cloud:
     config:
