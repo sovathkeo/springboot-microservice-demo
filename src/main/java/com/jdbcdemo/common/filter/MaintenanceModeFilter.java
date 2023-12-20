@@ -1,6 +1,7 @@
 package com.jdbcdemo.common.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jdbcdemo.common.configurations.appsetting.ApplicationConfiguration;
 import com.jdbcdemo.models.responses.Response;
 import com.jdbcdemo.services.maintenance.MaintenanceService;
 import com.jdbcdemo.services.tracing.CorrelationService;
@@ -16,9 +17,13 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.Objects;
 
 public class MaintenanceModeFilter extends OncePerRequestFilter {
+
+    @Autowired
+    private ApplicationConfiguration appSetting;
 
     @Autowired
     private ObjectMapper mapper;
@@ -35,7 +40,7 @@ public class MaintenanceModeFilter extends OncePerRequestFilter {
                                     @Nonnull FilterChain filterChain) throws ServletException, IOException {
         configureInjectionBasedOnServletContext(request);
 
-        if (maintenanceService.isUnderMaintenance()) {
+        if (!isBypassAuth(request) && maintenanceService.isUnderMaintenance()) {
             Objects.requireNonNull(response).setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
 
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
@@ -60,6 +65,20 @@ public class MaintenanceModeFilter extends OncePerRequestFilter {
     private void configureInjectionBasedOnServletContext(HttpServletRequest request) {
         SpringBeanAutowiringSupport
                 .processInjectionBasedOnServletContext(this, Objects.requireNonNull(request).getServletContext());
+    }
+
+    private boolean isBypassAuth(HttpServletRequest request) {
+        return isInAuthWhitelist(request) || isMonitoringRequest(request);
+    }
+
+    private boolean isInAuthWhitelist(HttpServletRequest request) {
+        var requestUri = request.getRequestURI();
+        return Arrays.stream(appSetting.getEndpointsAuthWhitelist())
+                .anyMatch(requestUri::startsWith);
+    }
+
+    private boolean isMonitoringRequest( HttpServletRequest request) {
+        return request.getRequestURI().startsWith("/actuator");
     }
 
 }

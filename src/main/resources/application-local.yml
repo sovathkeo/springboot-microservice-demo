@@ -1,15 +1,18 @@
 spring:
-
   config:
-    import: configserver:http://localhost:8888
-
+    import: configserver:https://dev-apiserver.camgsm.com.kh/config-server/v1
   cloud:
+    bus:
+      enabled: true
     config:
       enabled: true
       username: ADMIN
       password: 123
       label: main
       profiles: local
+
+  flyway:
+    enabled: false
 
   application:
     name: "ms-api-boilerplate"

@@ -3,6 +3,7 @@ package com.jdbcdemo.models.ocs.base;
 import com.jdbcdemo.common.constant.OcsXpathExpressionConstant;
 import com.jdbcdemo.common.enums.ocs.OcsResponseParam;
 import com.jdbcdemo.common.helper.StringHelper;
+import lombok.Getter;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
@@ -17,16 +18,24 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.Optional;
 
 public class OcsResponseBaseModel {
 
-    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-    DocumentBuilder builder = factory.newDocumentBuilder();
-    Document ocsResponseDoc;
-    XPath xPath = XPathFactory.newInstance().newXPath();
+    protected DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    protected DocumentBuilder builder = factory.newDocumentBuilder();
+    protected Document ocsResponseDoc;
+    protected XPath xPath = XPathFactory.newInstance().newXPath();
+
+    @Getter
     protected final String result;
+
+    @Getter
     protected final String errorCode;
+
+    @Getter
     protected final String errorMsg;
+
 
     protected OcsResponseBaseModel(String response) throws ParserConfigurationException {
         try {
@@ -47,19 +56,6 @@ public class OcsResponseBaseModel {
         return this.result.equalsIgnoreCase(OcsResponseParam.SUCCESS_RESULT.getKey());
     }
 
-
-    public String getResult() {
-        return result;
-    }
-
-    public String getErrorCode() {
-        return errorCode;
-    }
-
-    public String getErrorMsg() {
-        return errorMsg;
-    }
-
     protected String getXmlValue(String expression) {
         if (this.ocsResponseDoc == null) {
             throw new RuntimeException("parsing xml response to xml document error, ocsResponseDoc is null");
@@ -71,6 +67,19 @@ public class OcsResponseBaseModel {
             return nodes.item(0).getTextContent();
         } catch (Exception e) {
             return "null";
+        }
+    }
+
+    protected Optional<NodeList> getNodeLIst(String expression) {
+        if (this.ocsResponseDoc == null) {
+            throw new RuntimeException("parsing xml response to xml document error, ocsResponseDoc is null");
+        }
+        try {
+            XPathExpression expr = xPath.compile(expression);
+            Object result = expr.evaluate(this.ocsResponseDoc, XPathConstants.NODESET);
+            return Optional.of((NodeList) result);
+        } catch (Exception e) {
+            return Optional.empty();
         }
     }
 }

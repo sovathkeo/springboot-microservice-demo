@@ -11,11 +11,11 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
-@Component
-@KafkaListener(
-        topics = "${spring.kafka.topic-name:KafkaConsumerTopUpEvent}",
-        groupId = "${spring.kafka.group-id: :KafkaConsumerTopUpEvent}",
-        autoStartup = "${spring.kafka.required:false}")
+//@Component
+//@KafkaListener(
+//        topics = "${spring.kafka.topic-name:KafkaConsumerTopUpEvent}",
+//        groupId = "${spring.kafka.group-id: :KafkaConsumerTopUpEvent}",
+//        autoStartup = "${spring.kafka.required:false}")
 public class KafkaConsumerTopUpEvent extends ApplicationLogging {
     private final WebClientWrapper webClient;
     private final AsyncOperationWrapper asyncOperationWrapper;

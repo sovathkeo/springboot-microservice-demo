@@ -35,20 +35,6 @@ public class LogFilter extends OncePerRequestFilter {
         var correlationId = correlationService.getCorrelationId();
         MDC.put(HttpHeaderConstant.CORRELATION_ID,correlationId);
         Objects.requireNonNull(filterChain).doFilter(request, response);
-        /*
-        ContentCachingRequestWrapper req = new ContentCachingRequestWrapper(Objects.requireNonNull(request));
-        ContentCachingResponseWrapper res = new ContentCachingResponseWrapper(Objects.requireNonNull(response));
-
-        Objects.requireNonNull(filterChain).doFilter(req, res);
-
-        var logHelper = initializeLogParams(request, HttpRequestHelper.getBodyAsString(req), correlationId);
-        logger.info(logHelper.getLogMessage());
-
-        logHelper.action = "Response";
-        logHelper.result = "success";
-        logger.info(logHelper.getLogMessage());
-
-        res.copyBodyToResponse();*/
     }
 
     private void configureInjectionBasedOnServletContext(HttpServletRequest request) {
@@ -59,16 +45,10 @@ public class LogFilter extends OncePerRequestFilter {
     private ApplicationLog initializeLogParams( HttpServletRequest request, String payload, String correlationId) {
 
         final String serviceName = appSetting.getApplicationName();
-        final String methodName = "check eligibility";
+        final String methodName = "default";
 
         String clientIp = request.getHeader(HttpHeaderConstant.X_FORWARDED_FOR);
-        String requestId = request.getHeader(HttpHeaderConstant.X_CELLCARD_REQUEST_ID);
-        if (StringHelper.isNullOrEmpty(requestId)) {
-            requestId = correlationId;
-        }
-        if (StringHelper.isNullOrEmpty(requestId)) {
-            requestId = UuidWrapper.uuidAsString();
-        }
+
         if(clientIp == null) clientIp = request.getRemoteUser();
         // common log declaration
         return new ApplicationLog(

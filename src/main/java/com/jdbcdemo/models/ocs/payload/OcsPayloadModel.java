@@ -1,6 +1,9 @@
 package com.jdbcdemo.models.ocs.payload;
 
 
+import com.jdbcdemo.common.helper.StringHelper;
+import com.jdbcdemo.common.wrapper.UuidWrapper;
+
 public class OcsPayloadModel {
 
     public static String querySubscriberAccount(String reqId,String accountId){
@@ -32,7 +35,10 @@ public class OcsPayloadModel {
                 """.formatted(reqId,accountId);
     }
 
-    public String queryBundle(String requestId, String accountId, String transactionId){
+    public static String queryBundle(String accountId) {
+        return queryBundle(accountId, UuidWrapper.uuidAsString(), UuidWrapper.uuidAsString());
+    }
+    public static String queryBundle(String accountId, String requestId, String transactionId){
         return """
                 <RetrieveRequest xmlns="http://alcatel-lucent.com/esm/ws/svcmgr/V2_0">
                      <SessionInfo>
@@ -234,6 +240,9 @@ public class OcsPayloadModel {
                 """.formatted(reqId,accountId,bundleId,bundleFee,transactionId);
     }
     public String subscribeBundle(String reqId,String accountId,String bundleId,String transactionId){
+        if (StringHelper.isNullOrEmpty(reqId)) {
+            reqId = UuidWrapper.uuidAsString();
+        }
         return """
                 <SubmitRequest xmlns="http://alcatel-lucent.com/esm/ws/svcmgr/V2_0">
                     <SessionInfo>

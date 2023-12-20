@@ -1,15 +1,85 @@
+server:
+  port: 80
+
 spring:
 
-  config:
-    import: configserver:http://localhost:8888
-
   cloud:
+    bus:
+      enabled: false
     config:
-      enabled: true
-      username: ADMIN
-      password: 123
-      label: main
-      profiles: prod
+      enabled: false
 
   application:
-    name: "ms-api-boilerplate"
+    name: ms-api-boilerplate
+  datasource:
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    url: ${DATABASE_URL:jdbc:sqlserver://localhost:1433;databaseName=demo;trustServerCertificate=true}
+    username: ${DATABASE_USERNAME:devadmin}
+    password: ${DATABASE_PASSWORD:V@!aDmin2020Devusr}
+    hikari:
+      connection-timeout: 3000
+
+  kafka:
+    required: true
+    bootstrap-servers: qa-kaf1.camgsm.com.kh:9092
+    group-id: sovath-test-1
+
+  redis:
+    host: 172.16.101.164
+    port: 32075
+    password: UOWMh5uVKi
+    timeout: 3000
+
+  bus:
+    enabled: true
+
+jpa:
+  hibernate:
+    ddl-auto: update
+  show-sql: false
+  properties:
+    hibernate:
+      format_sql: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  security:
+    enabled: false
+  info:
+    env:
+      enabled: true
+
+  endpoint:
+    health:
+      show-details: always
+  shutdown:
+    enabled: true
+
+logging:
+  level:
+    org:
+      springframework:
+        boot: ERROR
+        web: OFF
+        security: OFF
+      apache:
+        kafka: OFF
+      hibernate: OFF
+
+
+  pattern:
+    date-format: yyyy-dd-MM HH:mm:ss.SSS
+    console: '%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%-20.20thread] %-38X{X-CorrelationId:-00000000-0000-0000-0000-000000000000} %-30.30logger{0} : %msg%n'
+
+application-config:
+  maintenance-mode: 'OFF'
+  maintenance-message: 'Sorry the service is under maintenance! Please try again later.'
+  microservices:
+    ocs-service:
+      base-url: "https://prd-apiserver.camgsm.com.kh/services/surepay"
+    sms-service:
+      base-url: "https://prd-apiserver.camgsm.com.kh/sms-transmit/v1/accounts/%s"
+

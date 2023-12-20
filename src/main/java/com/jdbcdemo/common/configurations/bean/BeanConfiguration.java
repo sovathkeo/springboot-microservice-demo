@@ -6,6 +6,7 @@ import com.jdbcdemo.common.wrapper.WebClientWrapper;
 import com.jdbcdemo.services.tracing.CorrelationService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,9 +17,6 @@ import java.util.Collections;
 
 @Configuration
 public class BeanConfiguration {
-
-    @Value("${spring.datasource.url}")
-    String dbUrl;
 
     @Bean
     public ModelMapper modelMapper() {
@@ -36,6 +34,7 @@ public class BeanConfiguration {
     }
 
     @Bean
+    @ConditionalOnBean
     public WebClient webClient( CorrelationService correlationService ) {
         return WebClient
             .builder()
@@ -44,6 +43,7 @@ public class BeanConfiguration {
     }
 
     @Bean
+    @ConditionalOnBean
     public WebClient.Builder webClientBuilder( CorrelationService correlationService ) {
         return WebClient
             .builder()

@@ -1,9 +1,10 @@
 spring:
-
   config:
-    import: configserver:http://localhost:8888
+    import: ${CONFIG_SERVER_URL:configserver:https://dev-apiserver.camgsm.com.kh/config-server/v1}
 
   cloud:
+    bus:
+      enabled: true
     config:
       enabled: true
       username: ADMIN

@@ -5,6 +5,7 @@ import com.jdbcdemo.common.logging.ApplicationLogging;
 import com.jdbcdemo.common.wrapper.UuidWrapper;
 import com.jdbcdemo.common.wrapper.WebClientWrapper;
 import com.jdbcdemo.models.ocs.OcsQueryAccountResponseModel;
+import com.jdbcdemo.models.ocs.bundle.OcsQueryBundleResponseModel;
 import com.jdbcdemo.models.ocs.payload.OcsPayloadModel;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
@@ -25,6 +26,18 @@ public class OcsQueryServiceImpl  implements OcsQueryService {
     @Qualifier("applicationLogging")
     ApplicationLogging appLogger;
 
+    public Mono<Optional<OcsQueryBundleResponseModel>> queryBundle(String accountId) {
+        var payload = OcsPayloadModel.queryBundle(accountId);
+        var response = webClient
+                .postXmlAsync(OCS_URL, payload)
+                .block();
+        try {
+            var bundleRes = new OcsQueryBundleResponseModel(response.getBody());
+            return Mono.just(Optional.of(bundleRes));
+        } catch (ParserConfigurationException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     final Logger logger = LoggerFactory.getLogger(OcsQueryServiceImpl.class);
     @Autowired
