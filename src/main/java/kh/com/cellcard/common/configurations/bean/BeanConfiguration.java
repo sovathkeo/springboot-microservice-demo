@@ -1,0 +1,50 @@
+package kh.com.cellcard.common.configurations.bean;
+
+import kh.com.cellcard.common.interceptor.ExchangeInterceptorFunctions;
+import kh.com.cellcard.common.interceptor.RestTemplateAddHeaderInterceptor;
+import kh.com.cellcard.services.tracing.CorrelationService;
+import org.modelmapper.ModelMapper;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
+
+import java.util.Collections;
+
+@Configuration
+public class BeanConfiguration {
+
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
+    }
+
+    @Bean
+    public RestTemplate restTemplate( RestTemplateBuilder builder, RestTemplateAddHeaderInterceptor restTemplateAddHeaderInterceptor) {
+        var restTemplate = builder
+            .build();
+
+        restTemplate.setInterceptors(Collections.singletonList(restTemplateAddHeaderInterceptor));
+
+        return restTemplate;
+    }
+
+    @Bean
+    @ConditionalOnBean
+    public WebClient webClient( CorrelationService correlationService ) {
+        return WebClient
+            .builder()
+            .filter((req, next) -> ExchangeInterceptorFunctions.addCorrelationIdHeader(req,correlationService, next))
+            .build();
+    }
+
+    @Bean
+    @ConditionalOnBean
+    public WebClient.Builder webClientBuilder( CorrelationService correlationService ) {
+        return WebClient
+            .builder()
+            .filter((req, next) -> ExchangeInterceptorFunctions.addCorrelationIdHeader(req,correlationService, next));
+    }
+}
