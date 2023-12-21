@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com</groupId>
 	<artifactId>ms-api-boilerplate</artifactId>
-	<version>0.0.2</version>
+	<version>0.0.4</version>
 	<name>ms-api-boilerplate</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>

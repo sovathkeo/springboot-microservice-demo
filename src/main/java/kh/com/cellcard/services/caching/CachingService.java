@@ -1,6 +1,6 @@
-package com.jdbcdemo.services.caching;
+package kh.com.cellcard.services.caching;
 
-import com.jdbcdemo.common.helper.StringHelper;
+import kh.com.cellcard.common.helper.StringHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.RedisConnectionFailureException;
 import org.springframework.data.redis.connection.RedisConnectionFactory;

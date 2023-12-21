@@ -13,7 +13,7 @@ public class DateTimeWrapper {
         return new SimpleDateFormat(format).format(now());
     }
 
-    public static String getTimestamp() {
+    public static String getTimestampMillis() {
         return String.valueOf(System.currentTimeMillis());
     }
 }

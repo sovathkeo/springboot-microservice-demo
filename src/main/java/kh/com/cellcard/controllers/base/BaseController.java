@@ -63,7 +63,7 @@ public class BaseController {
             methodName,
             "",
             clientIp,
-            "",
+            "CCApp",
             command.accountId,
             payload,
             correlationService );
@@ -94,5 +94,9 @@ public class BaseController {
             correlationService );
 
         shareService.setObject(applicationLog);
+    }
+
+    protected void logInfo(){
+        logger.info(applicationLog.getLogMessage());
     }
 }

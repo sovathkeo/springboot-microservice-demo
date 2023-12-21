@@ -7,6 +7,6 @@ import lombok.Setter;
 @Setter
 public class MicroservicesConfig {
     public MicroserviceConfig ocsService;
-
     public SmsPushServiceConfig smsService;
+    public BillingServiceConfig billingService;
 }

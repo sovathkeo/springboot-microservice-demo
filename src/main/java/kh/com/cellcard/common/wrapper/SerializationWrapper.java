@@ -1,0 +1,11 @@
+package kh.com.cellcard.common.wrapper;
+
+import com.google.gson.Gson;
+
+public class SerializationWrapper {
+    private static final Gson gson = new Gson();
+
+    public static  <T> T to(String json,Class<T> targetClass) {
+        return gson.fromJson(json, targetClass);
+    }
+}

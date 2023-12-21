@@ -8,6 +8,7 @@ import kh.com.cellcard.features.app.queries.appinfofromgit.GetAppInfoQuery;
 import kh.com.cellcard.features.config.query.GetConfigQuery;
 import kh.com.cellcard.models.notification.sms.SmsNotificationRequestModel;
 import kh.com.cellcard.models.responses.Response;
+import kh.com.cellcard.services.billing.BillingService;
 import kh.com.cellcard.services.notification.NotificationService;
 import kh.com.cellcard.services.ocs.base.OcsServiceImpl;
 import kh.com.cellcard.services.tracing.CorrelationService;
@@ -27,6 +28,9 @@ public class ApplicationController extends BaseController {
     OcsServiceImpl ocsService;
 
     @Autowired
+    BillingService billingService;
+
+    @Autowired
     CorrelationService correlationService;
 
     @Autowired
@@ -38,8 +42,8 @@ public class ApplicationController extends BaseController {
 
 
     @GetMapping("/info")
-    public Response getAppInfo() {
-        var req = new GetAppInfoQuery("get-app-info");
+    public Response getAppInfo(@QueryParam("account_id") String account_id) {
+        var req = new GetAppInfoQuery("get-app-info", account_id);
         return mediate(req);
     }
 
@@ -50,20 +54,21 @@ public class ApplicationController extends BaseController {
     }
 
     @GetMapping("test")
-    public ResponseEntity<Object> test(@Autowired HttpServletRequest request) {
+    public ResponseEntity<Object> test(
+            @Autowired HttpServletRequest request,
+            @QueryParam("account_id") String account_id) {
 
-        super.initializeApplicationLogging(request, "test","85599204681","","CCApp","");
+        super.initializeApplicationLogging(request,
+                "billing-fetch-profile",
+                account_id,
+                "",
+                "CCApp",
+                "");
+        super.logInfo();
 
-        var result = ocsService
-                .query
-                .querySubscriberAccount("85599204681")
-                .block();
+        var billingProfile = billingService.fetchProfile(account_id);
 
-        if (Objects.requireNonNull(result).isEmpty() ) {
-            return ResponseEntity.internalServerError().build();
-        }
-
-        return ResponseEntity.ok(Response.success("success", correlationService));
+        return ResponseEntity.ok(Response.success(billingProfile, correlationService));
     }
 
     @GetMapping("get-config")

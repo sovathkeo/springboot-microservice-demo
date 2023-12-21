@@ -29,7 +29,12 @@ public class GetAppInfoQueryHandler extends ApplicationLogging implements Comman
     public Response handle(GetAppInfoQuery getAppInfoQuery ) {
 
         super.setRequestLogParams("100","config-file","load-app-setting-config");
+        super.logInfo();
 
+        super.setResponseLogParams("100", "config-file", "load-app-setting-config", "success", "0","success load app setting");
+        super.logInfo();
+
+        super.setLastResponseLogParams("200","success","0000","request successful");
         super.logInfo();
 
         return Response.success(appInfo, correlationService);

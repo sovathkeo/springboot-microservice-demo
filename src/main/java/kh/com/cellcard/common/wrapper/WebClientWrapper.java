@@ -55,7 +55,7 @@ public class WebClientWrapper {
         ;
     }
 
-    public ResponseEntity<?> post(String url, Object payload) {
+    public ResponseEntity<String> post(String url, Object payload) {
 
         return  webClientBuilder
             .build()
@@ -64,7 +64,7 @@ public class WebClientWrapper {
                 .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(payload)
             .retrieve()
-            .toEntity(Object.class)
+            .toEntity(String.class)
             .block();
     }
 
