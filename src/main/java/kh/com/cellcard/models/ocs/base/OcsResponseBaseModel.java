@@ -37,7 +37,7 @@ public class OcsResponseBaseModel {
     protected final String errorMsg;
 
 
-    protected OcsResponseBaseModel(String response) throws ParserConfigurationException {
+    public OcsResponseBaseModel(String response) throws ParserConfigurationException {
         try {
             if (StringHelper.isNullOrEmpty(response)) {
                 throw new RuntimeException("OCS response xml string can not be null or empty");

@@ -3,6 +3,7 @@ package kh.com.cellcard.models.ocs.payload;
 
 import kh.com.cellcard.common.helper.StringHelper;
 import kh.com.cellcard.common.wrapper.UuidWrapper;
+import kh.com.cellcard.models.ocs.bundle.OcsBundleModel;
 
 public class OcsPayloadModel {
 
@@ -277,6 +278,85 @@ public class OcsPayloadModel {
                     </TaskList>
                 </SubmitRequest>
                 """.formatted(reqId, accountId, bundleId, transactionId);
+    }
+
+    public static String subscribeBundleNA(String accountId, OcsBundleModel currentBundle, int periodOfSub, String newBundleName, String transactionId){
+        var startDate = currentBundle.calculateStartDateAsString(-periodOfSub);
+        var startTime = currentBundle.getStartTimeAsString();
+        var endDate = currentBundle.getEndDateAsString();
+        var endTime = currentBundle.getEndTimeAsString();
+        var reqId = UuidWrapper.uuidAsString();
+        return """
+                <SubmitRequest xmlns="http://alcatel-lucent.com/esm/ws/svcmgr/V2_0">
+                    <SessionInfo>
+                        <sessionId>1</sessionId>
+                    </SessionInfo>
+                    <RequestInfo>
+                        <ReqID>{REQUEST_ID}</ReqID>
+                    </RequestInfo>
+                    <NERoutingInfo>
+                        <NeName></NeName>
+                        <NeGroupName></NeGroupName>
+                        <DistributionKey></DistributionKey>
+                    </NERoutingInfo>
+                    <TaskList>
+                        <Task>
+                           <Name>Subscribe Bundle</Name>
+                           <ParamList>
+                               <Param>
+                                   <Name>Account ID</Name>
+                                   <Value>{ACCOUNT_ID}</Value>
+                               </Param>
+                               <Param>
+                                   <Name>Bundle ID</Name>
+                                   <Value>{NEW_BUNDLE}</Value>
+                               </Param>
+                               <Param>
+                                   <Name>Bundle Fee</Name>
+                                   <Value>0</Value>
+                               </Param>
+                               <Param>
+                                   <Name>Payment Source</Name>
+                                   <Value>Account</Value>
+                               </Param>
+                               <Param>
+                                   <Name>Old Bundle ID</Name>
+                                   <Value>{OLD_BUNDLE}</Value>
+                               </Param>
+                               <Param>
+                                   <Name>Start Date</Name>
+                                   <Value>{START_DATE}</Value>
+                               </Param>
+                               <Param>
+                                   <Name>Start Time</Name>
+                                   <Value>{START_TIME}</Value>
+                               </Param>
+                               <Param>
+                                   <Name>End Date</Name>
+                                   <Value>{END_DATE}</Value>
+                               </Param>
+                               <Param>
+                                   <Name>End Time</Name>
+                                   <Value>{END_TIME}</Value>
+                               </Param>
+                               <Param>
+                                   <Name>Transaction ID</Name>
+                                   <Value>{TRANSACTION_ID}</Value>
+                               </Param>
+                           </ParamList>
+                       </Task>
+                    </TaskList>
+                </SubmitRequest>
+                """
+                .replace("{REQUEST_ID}", reqId)
+                .replace("{ACCOUNT_ID}", accountId)
+                .replace("{NEW_BUNDLE}", newBundleName)
+                .replace("{OLD_BUNDLE}", currentBundle.bundleId)
+                .replace("{START_DATE}", startDate)
+                .replace("{START_TIME}", startTime)
+                .replace("{END_DATE}", endDate)
+                .replace("{END_TIME}", endTime)
+                .replace("{TRANSACTION_ID}", transactionId);
     }
 }
 

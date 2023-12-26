@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema#",
+  "$id": "http://www.cellcard.com.kh/schemas/subscribe-schema.json",
+  "type": "object",
+  "title": "subscribe-schema",
+  "description": "subscribe-schema processing",
+  "additionalProperties": true,
+  "required": ["accountId","originator","message"],
+  "properties": {
+    "accountId": {
+      "type": "string",
+      "description": "account required and can not be null",
+      "minLength": 11
+    },
+    "originator": {
+      "default": "NA",
+      "type": "string",
+      "description": "originator required",
+      "minLength": 5
+    },
+    "message": {
+      "type": "string",
+      "description": "message field required",
+      "minLength": 1
+    }
+  }
+}

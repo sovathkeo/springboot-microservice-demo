@@ -43,8 +43,8 @@ public class ApplicationLog extends ShareObject implements ApplicationLogger {
             .concat("transaction_time = ");
 
     private String transactionTime;
-    private String serviceName;
-    private String methodName;
+    public String serviceName;
+    public String methodName;
     private String correlationId;
     private String requestPlan;
     private String transactionId;

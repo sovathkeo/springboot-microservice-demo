@@ -1,7 +1,10 @@
 
 package kh.com.cellcard.common.wrapper;
 
+import kh.com.cellcard.common.configurations.appsetting.ApplicationConfiguration;
 import kh.com.cellcard.common.interceptor.ExchangeInterceptorFunctions;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -10,15 +13,20 @@ import org.springframework.web.reactive.function.client.ExchangeFilterFunctions;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.time.Duration;
+
+@Getter
 @Component
 public class WebClientWrapper {
 
     @Autowired
     private WebClient.Builder webClientBuilder;
 
-    public WebClient.Builder getWebClientBuilder() {
-        return webClientBuilder;
-    }
+    @Autowired
+    private ApplicationConfiguration appSetting;
+
+    @Setter
+    private int REQUEST_TIME_OUT;
 
     public WebClientWrapper useApiKeyAuthentication( String keyName, String keyValue) {
         webClientBuilder
@@ -42,16 +50,18 @@ public class WebClientWrapper {
                 .accept(MediaType.APPLICATION_JSON)
             .retrieve()
             .toEntity(Object.class)
+            .timeout(Duration.ofMillis(this.getRequestTimeout()))
             .block();
     }
 
-    public Mono<ResponseEntity<Object>> getAsync( String url) {
+    public Mono<ResponseEntity<String>> getAsync( String url) {
         return  webClientBuilder
             .build()
             .get()
             .uri(url)
             .retrieve()
-            .toEntity(Object.class)
+            .toEntity(String.class)
+            .timeout(Duration.ofMillis(this.getRequestTimeout()))
         ;
     }
 
@@ -65,6 +75,7 @@ public class WebClientWrapper {
             .bodyValue(payload)
             .retrieve()
             .toEntity(String.class)
+            .timeout(Duration.ofMillis(this.getRequestTimeout()))
             .block();
     }
 
@@ -76,10 +87,12 @@ public class WebClientWrapper {
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(payload)
                 .retrieve()
-                .toEntity(String.class);
+                .toEntity(String.class)
+                .timeout(Duration.ofMillis(this.getRequestTimeout()));
     }
 
     public Mono<ResponseEntity<String>> postXmlAsync(String url, Object payload) {
+
         return  webClientBuilder
             .build()
             .post()
@@ -88,6 +101,12 @@ public class WebClientWrapper {
             .bodyValue(payload)
             .retrieve()
             .toEntity(String.class)
-            ;
+            .timeout(Duration.ofMillis(this.getRequestTimeout()));
+    }
+
+    private int getRequestTimeout() {
+        return REQUEST_TIME_OUT < 1
+            ? appSetting.globalRequestTimeoutMillisecond
+            : REQUEST_TIME_OUT;
     }
 }

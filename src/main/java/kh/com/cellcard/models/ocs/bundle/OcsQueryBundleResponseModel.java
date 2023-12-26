@@ -6,7 +6,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.util.ArrayList;
 
 public class OcsQueryBundleResponseModel extends OcsResponseBaseModel {
-
     public ArrayList<OcsBundleModel> bundles = new ArrayList<>();
     public OcsQueryBundleResponseModel(String response) throws ParserConfigurationException {
         super(response);

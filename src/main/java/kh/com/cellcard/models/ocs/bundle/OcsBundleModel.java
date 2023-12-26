@@ -1,10 +1,15 @@
 package kh.com.cellcard.models.ocs.bundle;
 
 import kh.com.cellcard.common.constant.OcsBundleParamNameConstant;
+import kh.com.cellcard.common.constant.OcsDateTimeConstant;
+import kh.com.cellcard.common.enums.datetime.DatetimeUnit;
+import kh.com.cellcard.common.helper.StringHelper;
+import kh.com.cellcard.common.wrapper.DateTimeWrapper;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.w3c.dom.Node;
 
+import java.util.Date;
 import java.util.HashMap;
 
 @AllArgsConstructor
@@ -49,5 +54,57 @@ public class OcsBundleModel {
         } else if (name.startsWith("Bucket/")) {
             bucketParams.put(name, value);
         }
+    }
+
+    public Date getStartDatetime() {
+        if (StringHelper.isNullOrEmpty(this.startDateTime)) {
+            return DateTimeWrapper.defaultDate();
+        }
+
+        return DateTimeWrapper.fromString(startDateTime, OcsDateTimeConstant.OCS_DATETIME_FORMAT);
+    }
+
+    public String getStartDatetimeAsString() {
+        return DateTimeWrapper.toString(getStartDatetime(), "yyyy-MM-dd HH:mm:ss");
+    }
+
+    public String getStartTimeAsString() {
+        return this.getEndTimeAsString();
+    }
+
+    public String getStartDateAsString(){
+        return DateTimeWrapper.toString(this.getStartDatetime(), OcsDateTimeConstant.OCS_DATE_FORMAT);
+    }
+
+    public String calculateStartDateAsString(int periodOfSub) {
+        var newStartDatetime =  DateTimeWrapper.addDate(this.getEndDatetime(), periodOfSub, DatetimeUnit.DAY);
+        return DateTimeWrapper.toString(newStartDatetime, OcsDateTimeConstant.OCS_DATE_FORMAT);
+    }
+
+    public Date getEndDatetime() {
+        if (StringHelper.isNullOrEmpty(this.endDateTime)) {
+            return DateTimeWrapper.defaultDate();
+        }
+        return DateTimeWrapper.fromString(this.endDateTime, OcsDateTimeConstant.OCS_DATETIME_FORMAT);
+    }
+
+    public String getEndDateTimeAsString(String format) {
+        if (StringHelper.isNullOrEmpty(format)) {
+            format = "yyyy-MM-dd HH:mm:ss.SSS";
+        }
+        return DateTimeWrapper.toString(this.getEndDatetime(), format);
+    }
+
+    public String getEndDateAsString() {
+        return DateTimeWrapper.toString(this.getEndDatetime(), OcsDateTimeConstant.OCS_DATE_FORMAT);
+    }
+
+    public String getEndTimeAsString(){
+        return DateTimeWrapper.toString(this.getEndDatetime(), OcsDateTimeConstant.OCS_TIME_FORMAT);
+    }
+
+    public boolean isEndDatetimeLessThanEqualNowPlus2Minutes(){
+        var nearestDate = DateTimeWrapper.addDate(DateTimeWrapper.now(), 2, DatetimeUnit.MINUTE);
+        return DateTimeWrapper.isBeforeOrEqualOther(this.getEndDatetime(), nearestDate);
     }
 }

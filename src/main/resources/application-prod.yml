@@ -1,7 +1,6 @@
 spring:
   config:
     import: ${CONFIG_SERVER_URL:configserver:https://dev-apiserver.camgsm.com.kh/config-server/v1}
-
   cloud:
     bus:
       enabled: true

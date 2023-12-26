@@ -1,4 +1,4 @@
-package kh.com.cellcard.common.validators;
+package kh.com.cellcard.common.validators.pipeline;
 
 import an.awesome.pipelinr.Command;
 import an.awesome.pipelinr.repack.com.google.common.reflect.TypeToken;

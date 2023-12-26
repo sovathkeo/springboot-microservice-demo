@@ -1,14 +1,15 @@
 spring:
   config:
-    import: configserver:${CONFIG_SERVER_URL:https://dev-apiserver.camgsm.com.kh/config-server/v1}
-
+    import: configserver:https://dev-apiserver.camgsm.com.kh/config-server/v1
   cloud:
+    bus:
+      enabled: true
     config:
       enabled: true
       username: ADMIN
       password: 123
       label: main
-      profiles: dev
+      profiles: develop
 
   application:
     name: "ms-api-boilerplate"

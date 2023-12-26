@@ -3,6 +3,7 @@ package kh.com.cellcard.services.tracing;
 import jakarta.servlet.http.HttpServletRequest;
 import kh.com.cellcard.common.constant.HttpHeaderConstant;
 import kh.com.cellcard.common.helper.StringHelper;
+import kh.com.cellcard.common.wrapper.UuidWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -65,6 +66,6 @@ public class CorrelationServiceImpl implements CorrelationService {
             }
         }
 
-        return UUID.randomUUID().toString();
+        return UuidWrapper.uuidAsString();
     }
 }

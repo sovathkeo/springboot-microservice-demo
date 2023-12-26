@@ -1,8 +1,7 @@
 server:
-  port: 9090
+  port: 80
 
 spring:
-
   cloud:
     bus:
       enabled: false
@@ -63,12 +62,10 @@ logging:
     org:
       springframework:
         boot: ERROR
-        web: OFF
-        security: OFF
+        web: ERROR
       apache:
         kafka: OFF
       hibernate: OFF
-
 
   pattern:
     date-format: yyyy-dd-MM HH:mm:ss.SSS
@@ -77,11 +74,53 @@ logging:
 application-config:
   maintenance-mode: 'OFF'
   maintenance-message: 'Sorry the service is under maintenance! Please try again later.'
+  global-request-timeout-millisecond: 5
+  global-connect-timeout-millisecond: 10000
   microservices:
     ocs-service:
       base-url: "https://prd-apiserver.camgsm.com.kh/services/surepay"
+      request-timeout-millisecond: 4000
     sms-service:
       base-url: "https://prd-apiserver.camgsm.com.kh/sms-transmit/v1/accounts/%s"
+      request-timeout-millisecond: 4000
     billing-service:
       base-url: "https://prd-apiserver.camgsm.com.kh/services/proxyBilling"
+      request-timeout-millisecond: 4000
+
+  sms-catalogs:
+    - system-error:
+        code: '0005'
+        message:
+          kh: 'Issues on system when provisioning your request", khmer'
+          en: 'Issues on system when provisioning your request'
+        description: 'Invalid Account Id !'
+    - invalid-account-id:
+        code: '0004'
+        message:
+          kh: 'Invalid Account Id !, khmer'
+          en: 'Invalid Account Id !'
+        description: 'Invalid Account Id !'
+    - invalid-request-plan:
+        code: "0005"
+        message:
+          kh: 'Invalid request plan. Khmer'
+          en: 'Invalid request plan .'
+        description: "plan name invalid"
+
+#    - subscribe-success:
+#        code: "0000"
+#        message:
+#          en: "You subscribed to Reseller Plus $1. Next Renewal: {next_date}. To check balance dial *1201#"
+#          kh: "You subscribed to Reseller Plus $1. Next Renewal: {next_date}. To check balance dial *1201#, Khmer"
+#        description: "Successfully subscribed"
+#
+#    - subscribe-not-enough-balance:
+#        code: "0001"
+#        message:
+#          en: "Not enough balance."
+#          kh: "Not enough balance. Khmer"
+#        description: "not enough balance"
+
+
+
 
