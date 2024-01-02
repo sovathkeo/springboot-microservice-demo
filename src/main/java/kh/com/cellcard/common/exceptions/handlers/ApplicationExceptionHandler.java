@@ -21,8 +21,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -128,6 +130,26 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
             Objects.requireNonNull(request));
     }
 
+    @Override
+    protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(
+           @NonNull HttpRequestMethodNotSupportedException ex,
+           @NonNull HttpHeaders headers,
+           @NonNull HttpStatusCode status,
+           @NonNull WebRequest request) {
+
+        var correlationId = correlationService.getCorrelationId();
+        var statusCode = HttpStatus.METHOD_NOT_ALLOWED;
+
+        var body = Response.failure(statusCode.toString(), "Request Not Supported",ex.getMessage(), correlationId);
+
+        return handleExceptionInternal(
+                ex,
+                body,
+                HttpHeaders.EMPTY,
+                statusCode,
+                Objects.requireNonNull(request));
+    }
+
     private ResponseEntity<Object> handleApplicationException(
         Exception ex,
         WebRequest request) throws JsonProcessingException{
@@ -146,7 +168,7 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
 
         logger.error(bodyString, ex);
 
-        //telegramBot.sendMessageAsync(body);
+        telegramBot.sendMessageAsync(body);
 
         return handleExceptionInternal(ex, body, HttpHeaders.EMPTY, statusCode, request);
     }

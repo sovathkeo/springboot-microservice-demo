@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class BaseController {
 
-    private final ApplicationLog applicationLog = new ApplicationLog();
+    protected final ApplicationLog applicationLog = new ApplicationLog();
 
     final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired

@@ -22,6 +22,7 @@ spring:
     required: true
     bootstrap-servers: qa-kaf1.camgsm.com.kh:9092
     group-id: sovath-test-1
+    topic-name: tcp_testing
 
   redis:
     host: 172.16.101.164
@@ -69,7 +70,7 @@ logging:
 
   pattern:
     date-format: yyyy-dd-MM HH:mm:ss.SSS
-    console: '%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%-20.20thread] %-38X{X-CorrelationId:-00000000-0000-0000-0000-000000000000} %-30.30logger{0} : %msg%n'
+    console: '%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%-25.25thread] %-38X{X-CorrelationId:-00000000-0000-0000-0000-000000000000} %-30.30logger{0} : %msg%n'
 
 application-config:
   maintenance-mode: 'OFF'
@@ -88,7 +89,7 @@ application-config:
       request-timeout-millisecond: 4000
     sms-catalog-service:
       base-url: "https://prd-apiserver.camgsm.com.kh/ServiceMessageCatalog/v1/ServiceName/{service_name}/get?language={language}&method={method}&error_code={error_code}&type={type}"
-      request-timeout-millisecond: 4000
+      request-timeout-millisecond: 40000
     
   sms-catalogs:
     - system-error:

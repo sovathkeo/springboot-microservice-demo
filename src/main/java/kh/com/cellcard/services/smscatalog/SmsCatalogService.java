@@ -4,18 +4,22 @@ import kh.com.cellcard.common.configurations.appsetting.ApplicationConfiguration
 import kh.com.cellcard.common.configurations.appsetting.smscatalog.MessageCatalogConfig;
 import kh.com.cellcard.common.enums.smscatalog.MessageCatalogGroup;
 import kh.com.cellcard.common.helper.logging.ApplicationLog;
+import kh.com.cellcard.common.logging.ApplicationLogging;
 import kh.com.cellcard.common.wrapper.SerializationWrapper;
 import kh.com.cellcard.common.wrapper.WebClientWrapper;
 import kh.com.cellcard.models.smscatalog.SmsCatalogResponseModel;
 import kh.com.cellcard.services.shareservice.ShareServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Optional;
 
 @Service
-public class SmsCatalogService {
+public class SmsCatalogService extends ApplicationLogging {
 
     private final HashMap<String, MessageCatalogConfig>[] smsCatalogs;
     private final WebClientWrapper webClientWrapper;
@@ -45,32 +49,47 @@ public class SmsCatalogService {
 
     }
 
-    public MessageCatalogConfig getSmsCatalog(String errorCode, String language) {
+    public Optional<SmsCatalogResponseModel> getSmsCatalog(String errorCode, String language) {
+
+        /*final Logger logger = LoggerFactory.getLogger(this.getClass());
+        var logMsg = String.format("==> getSmsCatalog, errorCode = %s", errorCode);
+        logger.info(logMsg);*/
+
+        webClientWrapper
+            .getAsync("https://622bf548-c8f6-409c-a314-eb4a23a3caf9.mock.pstmn.io/delay-5s-has-body")
+            .block();
+
+        super.setRequestLogParams("-1","SMS-Catalog","get-sms-catalog");
+        super.logInfo();
+
+        var url = buildSmsCatalogUrl(errorCode, language);
+
+        var smsCatalogRes = webClientWrapper
+                .getAsync(url)
+                .block();
+        if (smsCatalogRes == null) {
+            return Optional.empty();
+        }
+        
+        var sms = SerializationWrapper
+                .deserialize(smsCatalogRes.getBody(), SmsCatalogResponseModel.class);
+        return Optional.of(sms);
+    }
+
+    private String buildSmsCatalogUrl(String errorCode, String language) {
+        var serviceName = "";
+        var methodName = "";
         var appLog = shareService.getObject(ApplicationLog.class);
-        var serviceName = "HungamaGame";
-        var methodName = "Subscribe";
-        errorCode = "0000";
-        language = "ENGLISH";
-        /*if (appLog.isPresent()) {
+        if (appLog.isPresent()) {
             var applicationLog = (ApplicationLog)appLog.get();
             serviceName = applicationLog.serviceName;
             methodName = applicationLog.methodName;
-        }*/
-
-        var url = BASE_URL
+        }
+        return BASE_URL
                 .replace("{service_name}",serviceName)
                 .replace("{method}",methodName)
                 .replace("{error_code}",errorCode)
                 .replace("{type}","NONE")
                 .replace("{language}",language);
-
-        var smsCatalogRes = webClientWrapper
-                .getAsync(url)
-                .block();
-
-        var sms = SerializationWrapper
-                .deserialize(smsCatalogRes.getBody().toString(), SmsCatalogResponseModel.class);
-        return null;
     }
-
 }

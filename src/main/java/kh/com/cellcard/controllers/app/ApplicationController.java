@@ -3,19 +3,14 @@ package kh.com.cellcard.controllers.app;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.QueryParam;
-import kh.com.cellcard.common.configurations.appsetting.ApplicationConfiguration;
-import kh.com.cellcard.common.enums.smscatalog.MessageCatalogGroup;
 import kh.com.cellcard.common.validators.jsonschema.ValidJson;
 import kh.com.cellcard.controllers.base.BaseController;
 import kh.com.cellcard.features.app.queries.appinfofromgit.GetAppInfoQuery;
-import kh.com.cellcard.features.config.query.GetConfigQuery;
 import kh.com.cellcard.models.notification.sms.SmsNotificationRequestModel;
 import kh.com.cellcard.models.responses.Response;
+import kh.com.cellcard.models.smscatalog.SmsCatalogResponseModel;
 import kh.com.cellcard.repository.StoreProcedureRepository;
-import kh.com.cellcard.services.billing.BillingService;
 import kh.com.cellcard.services.notification.NotificationService;
-import kh.com.cellcard.services.ocs.base.OcsServiceImpl;
-import kh.com.cellcard.services.smscatalog.SmsCatalogService;
 import kh.com.cellcard.services.tracing.CorrelationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -31,12 +26,6 @@ import static kh.com.cellcard.common.validators.jsonschema.SchemaLocations.PUSHS
 public class ApplicationController extends BaseController {
 
     @Autowired
-    OcsServiceImpl ocsService;
-
-    @Autowired
-    BillingService billingService;
-
-    @Autowired
     CorrelationService correlationService;
 
     @Autowired
@@ -44,12 +33,6 @@ public class ApplicationController extends BaseController {
 
     @Autowired
     StoreProcedureRepository storeProcedureRepo;
-
-    @Autowired
-    SmsCatalogService smsCatalogService;
-
-    @Autowired
-    ApplicationConfiguration appSetting;
 
     protected ApplicationController(@Autowired HttpServletRequest request) {
         super(request);
@@ -71,7 +54,6 @@ public class ApplicationController extends BaseController {
                 "Testing",
                 "");
         super.logInfo();
-        //var req = new GetAppInfoFromDbQuery();
         var result = storeProcedureRepo.Execute("", null);
         return Response.success(result.get(), correlationService);
     }
@@ -82,45 +64,17 @@ public class ApplicationController extends BaseController {
             @QueryParam("account_id") String account_id) {
 
         super.initializeApplicationLogging(request,
-                "unsubscribe",
+                "Subscribe",
                 account_id,
                 "",
                 "CCApp",
                 "");
         super.logInfo();
 
-        /*var result = ocsService
-                .query
-                .queryBundle(account_id)
-                .block();*/
-
-        /*var targetBundleId = "SereyP_$1";
-        var nonAutoBundle = targetBundleId + "NA";
-        var bundle = result
-                .get()
-                .bundles
-                .stream()
-                .filter(b -> b.bundleId.equalsIgnoreCase(targetBundleId))
-                .findFirst()
-                .get();
-        var subscribeNAResult = ocsService
-                .subscribe
-                .subscribeBundleNonAuto(account_id, bundle, 7, nonAutoBundle, "test_subscribe");*/
-        /*var sms = smsCatalogService
-                .getResponseMessage(MessageCatalogGroup.subscribe_success);*/
-
-        var smsCatalog = smsCatalogService.getSmsCatalog("","");
-
         return ResponseEntity.ok(Response.success(
-                smsCatalog,
+                String.valueOf(new SmsCatalogResponseModel()),
                 correlationService));
     }
-
-    @GetMapping("get-config")
-    public Response testConfig() {
-       return mediate(new GetConfigQuery("test-config", ""));
-    }
-
 
     @PostMapping("push-sms")
     public Response pushSms(@QueryParam("account_id") @Valid String account_id,

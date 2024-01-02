@@ -7,13 +7,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaHandler;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 //@Component
-//@KafkaListener(
-//        topics = "${spring.kafka.topic-name:KafkaConsumerTopUpEvent}",
-//        groupId = "${spring.kafka.group-id: :KafkaConsumerTopUpEvent}",
-//        autoStartup = "${spring.kafka.required:false}")
+@KafkaListener(
+        topics = "${spring.kafka.topic-name:KafkaConsumerTopUpEvent}",
+        groupId = "${spring.kafka.group-id: :KafkaConsumerTopUpEvent}",
+        autoStartup = "${spring.kafka.required:false}")
 public class KafkaConsumerTopUpEvent extends ApplicationLogging {
     private final WebClientWrapper webClient;
     private final AsyncOperationWrapper asyncOperationWrapper;
@@ -44,14 +46,14 @@ public class KafkaConsumerTopUpEvent extends ApplicationLogging {
         var uri = "https://622bf548-c8f6-409c-a314-eb4a23a3caf9.mock.pstmn.io/delay-5s-has-body";
 
         webClient
-                .getAsync(uri)
-                .subscribe(res -> {
+            .getAsync(uri)
+            .subscribe(res -> {
 
-                    var l = String.format("==> consumed, value = %s, completed API call", value);
-                    var b = res.getBody();
+                var l = String.format("==> consumed, value = %s, completed API call", value);
+                var b = res.getBody();
 
-                    logger.info(l);
-                });
+                logger.info(l);
+            });
 
         var l = String.format("==> consumed, value = %s, blocking completed", value);
         logger.info(l);
