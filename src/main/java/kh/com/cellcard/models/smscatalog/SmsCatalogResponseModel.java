@@ -1,8 +1,8 @@
 package kh.com.cellcard.models.smscatalog;
 
 import com.google.gson.annotations.SerializedName;
-import kh.com.cellcard.models.base.MicroserviceResponseBaseModel;
-import kh.com.cellcard.models.base.MicroserviceResponseData;
+import kh.com.cellcard.models.base.microservice.MicroserviceResponseBaseModel;
+import kh.com.cellcard.models.base.microservice.MicroserviceResponseData;
 import lombok.Getter;
 import lombok.Setter;
 

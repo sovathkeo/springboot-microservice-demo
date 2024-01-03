@@ -90,19 +90,22 @@ application-config:
     sms-catalog-service:
       base-url: "https://prd-apiserver.camgsm.com.kh/ServiceMessageCatalog/v1/ServiceName/{service_name}/get?language={language}&method={method}&error_code={error_code}&type={type}"
       request-timeout-millisecond: 40000
+    hlr-service:
+      base-url: "https://prd-apiserver.camgsm.com.kh/services/proxyHlr"
+      request-timeout-millisecond: 4000
     
   sms-catalogs:
+    - invalid-account-id:
+        code: '0001'
+        message:
+          kh: 'Invalid Account Id !'
+          en: 'Invalid Account Id !'
+        description: 'Invalid Account Id!'
     - system-error:
         code: '0005'
         message:
           kh: 'Issues on system when provisioning your request, khmer'
           en: 'Issues on system when provisioning your request'
-        description: 'Invalid Account Id !'
-    - invalid-account-id:
-        code: '0004'
-        message:
-          kh: 'Invalid Account Id !, khmer'
-          en: 'Invalid Account Id !'
         description: 'Invalid Account Id !'
     - invalid-request-plan:
         code: "0005"

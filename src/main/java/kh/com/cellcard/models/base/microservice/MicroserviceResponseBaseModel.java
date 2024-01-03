@@ -1,4 +1,4 @@
-package kh.com.cellcard.models.base;
+package kh.com.cellcard.models.base.microservice;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,4 +1,4 @@
-package kh.com.cellcard.common.helper;
+package kh.com.cellcard.common.helper.http;
 
 import org.springframework.web.util.ContentCachingResponseWrapper;
 

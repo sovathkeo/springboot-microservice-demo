@@ -10,7 +10,10 @@ import kh.com.cellcard.models.notification.sms.SmsNotificationRequestModel;
 import kh.com.cellcard.models.responses.Response;
 import kh.com.cellcard.models.smscatalog.SmsCatalogResponseModel;
 import kh.com.cellcard.repository.StoreProcedureRepository;
+import kh.com.cellcard.services.hlr.HlrService;
 import kh.com.cellcard.services.notification.NotificationService;
+import kh.com.cellcard.services.ocs.base.OcsService;
+import kh.com.cellcard.services.ocs.base.OcsServiceImpl;
 import kh.com.cellcard.services.tracing.CorrelationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +36,12 @@ public class ApplicationController extends BaseController {
 
     @Autowired
     StoreProcedureRepository storeProcedureRepo;
+
+    @Autowired
+    HlrService hlrService;
+
+    @Autowired
+    OcsServiceImpl ocsService;
 
     protected ApplicationController(@Autowired HttpServletRequest request) {
         super(request);
@@ -71,8 +80,11 @@ public class ApplicationController extends BaseController {
                 "");
         super.logInfo();
 
+        //var result = hlrService.querySubscriber(account_id, "");
+        var result = ocsService.query.querySubscriberAccount(account_id).block();
+
         return ResponseEntity.ok(Response.success(
-                String.valueOf(new SmsCatalogResponseModel()),
+                result.get(),
                 correlationService));
     }
 

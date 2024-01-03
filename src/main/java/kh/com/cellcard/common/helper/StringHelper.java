@@ -9,4 +9,6 @@ public abstract class StringHelper {
     public static String getValueOrEmpty(String value) {
         return isNullOrEmpty(value) ? "" : value;
     }
+
+
 }

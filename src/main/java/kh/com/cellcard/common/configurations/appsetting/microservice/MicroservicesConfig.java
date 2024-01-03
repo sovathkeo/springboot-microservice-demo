@@ -10,4 +10,5 @@ public class MicroservicesConfig {
     public SmsPushServiceConfig smsService;
     public BillingServiceConfig billingService;
     public BillingServiceConfig smsCatalogService;
+    public HlrServiceConfig hlrService;
 }
