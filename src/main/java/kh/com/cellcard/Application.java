@@ -1,9 +1,5 @@
 package kh.com.cellcard;
 
-import an.awesome.pipelinr.Command;
-import an.awesome.pipelinr.Notification;
-import an.awesome.pipelinr.Pipeline;
-import an.awesome.pipelinr.Pipelinr;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
@@ -19,11 +15,9 @@ import kh.com.cellcard.common.constant.SystemPropertyNameConstant;
 import kh.com.cellcard.common.helper.StringHelper;
 import kh.com.cellcard.common.registration.RegisterService;
 import org.slf4j.MDC;
-import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 import java.util.UUID;
@@ -61,15 +55,4 @@ public class Application {
         RegisterService.registers();
     }
 
-    @Bean
-    Pipeline pipeline(
-            ObjectProvider<Command.Handler> commandHandler,
-            ObjectProvider<Notification.Handler> notificationHandlers,
-            ObjectProvider<Command.Middleware> middlewares) {
-
-        return new Pipelinr()
-                .with(commandHandler::stream)
-                .with(notificationHandlers::stream)
-                .with(middlewares::stream);
-    }
 }

@@ -15,6 +15,10 @@ import java.util.Map;
 @NoArgsConstructor(force = true)
 public class ApplicationLog extends ShareObject implements ApplicationLogger {
 
+    public static ApplicationLog getInstance() {
+        return new ApplicationLog();
+    }
+
     private final String logMessage = "action = , "
             .concat("service_name = , ")
             .concat("account_id = , ")

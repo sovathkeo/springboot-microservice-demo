@@ -5,14 +5,12 @@ import jakarta.validation.Valid;
 import jakarta.ws.rs.QueryParam;
 import kh.com.cellcard.common.validators.jsonschema.ValidJson;
 import kh.com.cellcard.controllers.base.BaseController;
-import kh.com.cellcard.features.app.queries.appinfofromgit.GetAppInfoQuery;
+import kh.com.cellcard.features.app.queries.appinfofromdb.GetAppInfoFromDbCommand;
 import kh.com.cellcard.models.notification.sms.SmsNotificationRequestModel;
 import kh.com.cellcard.models.responses.Response;
-import kh.com.cellcard.models.smscatalog.SmsCatalogResponseModel;
 import kh.com.cellcard.repository.StoreProcedureRepository;
 import kh.com.cellcard.services.hlr.HlrService;
 import kh.com.cellcard.services.notification.NotificationService;
-import kh.com.cellcard.services.ocs.base.OcsService;
 import kh.com.cellcard.services.ocs.base.OcsServiceImpl;
 import kh.com.cellcard.services.tracing.CorrelationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,11 +45,9 @@ public class ApplicationController extends BaseController {
         super(request);
     }
 
-
     @GetMapping("/info")
-    public Response getAppInfo(@QueryParam("account_id") String account_id) {
-        var req = new GetAppInfoQuery("get-app-info", account_id);
-        return mediate(req);
+    public ResponseEntity<Response> getAppInfo(@QueryParam("account_id") String account_id) {
+        return super.execute(new GetAppInfoFromDbCommand(account_id));
     }
 
     @GetMapping("/info-db")
@@ -95,8 +91,6 @@ public class ApplicationController extends BaseController {
         notificationService.sms.push(new SmsNotificationRequestModel(request.originator, request.accountId,request.message, "123"));
         return Response.success();
     }
-
-
 
     public static class PushSms {
         public String accountId;
