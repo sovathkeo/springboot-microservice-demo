@@ -6,7 +6,6 @@ import jakarta.ws.rs.QueryParam;
 import kh.com.cellcard.common.validators.jsonschema.ValidJson;
 import kh.com.cellcard.controllers.base.BaseController;
 import kh.com.cellcard.features.app.queries.appinfofromdb.GetAppInfoFromDbCommand;
-import kh.com.cellcard.features.subscriber.queries.GetSubscriberCommand;
 import kh.com.cellcard.models.notification.sms.SmsNotificationRequestModel;
 import kh.com.cellcard.models.responses.Response;
 import kh.com.cellcard.repository.StoreProcedureRepository;
@@ -50,15 +49,6 @@ public class ApplicationController extends BaseController {
     public ResponseEntity<Response> getAppInfo(@QueryParam("account_id") String account_id) {
         return super.execute(
                 new GetAppInfoFromDbCommand(account_id, "get-subscriber-account"));
-    }
-
-    @GetMapping("/subscriber")
-    public ResponseEntity<Response> getSubscriberInfo(@QueryParam("account_id") String account_id) {
-        return super.execute(
-                new GetSubscriberCommand(
-                        account_id,
-                        "get-subscriber-account",
-                        "PREPAID"));
     }
 
     @GetMapping("/info-db")
