@@ -6,6 +6,7 @@ import jakarta.ws.rs.QueryParam;
 import kh.com.cellcard.common.validators.jsonschema.ValidJson;
 import kh.com.cellcard.controllers.base.BaseController;
 import kh.com.cellcard.features.app.queries.appinfofromdb.GetAppInfoFromDbCommand;
+import kh.com.cellcard.features.subscriber.queries.GetSubscriberCommand;
 import kh.com.cellcard.models.notification.sms.SmsNotificationRequestModel;
 import kh.com.cellcard.models.responses.Response;
 import kh.com.cellcard.repository.StoreProcedureRepository;
@@ -47,7 +48,17 @@ public class ApplicationController extends BaseController {
 
     @GetMapping("/info")
     public ResponseEntity<Response> getAppInfo(@QueryParam("account_id") String account_id) {
-        return super.execute(new GetAppInfoFromDbCommand(account_id));
+        return super.execute(
+                new GetAppInfoFromDbCommand(account_id, "get-subscriber-account"));
+    }
+
+    @GetMapping("/subscriber")
+    public ResponseEntity<Response> getSubscriberInfo(@QueryParam("account_id") String account_id) {
+        return super.execute(
+                new GetSubscriberCommand(
+                        account_id,
+                        "get-subscriber-account",
+                        "PREPAID"));
     }
 
     @GetMapping("/info-db")
@@ -60,7 +71,7 @@ public class ApplicationController extends BaseController {
                 "");
         super.logInfo();
         var result = storeProcedureRepo.Execute("", null);
-        return Response.success(result.get(), correlationService);
+        return Response.success(result.get());
     }
 
     @GetMapping("test")
@@ -76,12 +87,9 @@ public class ApplicationController extends BaseController {
                 "");
         super.logInfo();
 
-        //var result = hlrService.querySubscriber(account_id, "");
         var result = ocsService.query.querySubscriberAccount(account_id).block();
 
-        return ResponseEntity.ok(Response.success(
-                result.get(),
-                correlationService));
+        return ResponseEntity.ok(Response.success(result.get()));
     }
 
     @PostMapping("push-sms")

@@ -51,17 +51,6 @@ public class SmsCatalogService extends ApplicationLogging {
 
     public Optional<SmsCatalogResponseModel> getSmsCatalog(String errorCode, String language) {
 
-        /*final Logger logger = LoggerFactory.getLogger(this.getClass());
-        var logMsg = String.format("==> getSmsCatalog, errorCode = %s", errorCode);
-        logger.info(logMsg);*/
-
-        webClientWrapper
-            .getAsync("https://622bf548-c8f6-409c-a314-eb4a23a3caf9.mock.pstmn.io/delay-5s-has-body")
-            .block();
-
-        super.setRequestLogParams("-1","SMS-Catalog","get-sms-catalog");
-        super.logInfo();
-
         var url = buildSmsCatalogUrl(errorCode, language);
 
         var smsCatalogRes = webClientWrapper

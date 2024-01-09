@@ -3,8 +3,8 @@ package kh.com.cellcard.controllers.base;
 import jakarta.servlet.http.HttpServletRequest;
 import kh.com.cellcard.common.enums.smscatalog.MessageCatalogGroup;
 import kh.com.cellcard.common.helper.http.HttpRequestHelper;
-import kh.com.cellcard.common.mediator.MediatorCommand;
-import kh.com.cellcard.common.mediator.MediatorCommandHandler;
+import kh.com.cellcard.common.mediator.RequestCommand;
+import kh.com.cellcard.common.mediator.RequestCommandHandler;
 import kh.com.cellcard.common.configurations.appsetting.ApplicationConfiguration;
 import kh.com.cellcard.common.constant.HttpHeaderConstant;
 import kh.com.cellcard.common.helper.RequestParameterHelper;
@@ -47,10 +47,11 @@ public abstract class BaseController {
         this.request = request;
     }
 
-    public ResponseEntity<Response> execute(MediatorCommand command) {
+    public ResponseEntity<Response> execute(RequestCommand command) {
 
         initializeLogParams(command, this.request , HttpRequestHelper.getBodyAsString(this.request));
         logger.info(applicationLog.getLogMessage());
+
         if (!isValidRequestParams(command)) {
             var invalidAccountIdCatalog = smsCatalogService.getResponseMessage(MessageCatalogGroup.invalid_account_id);
             var response = Response.failure(
@@ -64,14 +65,14 @@ public abstract class BaseController {
 
         var handler = getHandler(command);
 
-        var result = handler.handle(command);
+        var result = handler.mediate(command);
 
         return  new ResponseEntity<>(result, HttpStatus.OK);
 
     }
 
     private void initializeLogParams(
-            MediatorCommand request,
+            RequestCommand request,
             HttpServletRequest httpServletRequest,
             String payload) {
 
@@ -126,17 +127,17 @@ public abstract class BaseController {
         logger.info(applicationLog.getLogMessage());
     }
 
-    protected boolean isValidRequestParams(MediatorCommand command) {
+    protected boolean isValidRequestParams(RequestCommand command) {
         var validAccountId = RequestParameterHelper.formatAccountId(command.accountId);
         return !validAccountId.equalsIgnoreCase("FALSE") && this.validateRequestParams(command);
     }
 
-    protected boolean validateRequestParams(MediatorCommand command) {
+    protected boolean validateRequestParams(RequestCommand command) {
         return true;
     }
 
-    private MediatorCommandHandler getHandler(MediatorCommand command) {
-        var beanHandlers = applicationContext.getBeansOfType(MediatorCommandHandler.class);
+    private RequestCommandHandler getHandler(RequestCommand command) {
+        var beanHandlers = applicationContext.getBeansOfType(RequestCommandHandler.class);
         return beanHandlers
                 .values()
                 .stream()

@@ -45,7 +45,7 @@ public class OcsResponseBaseModel extends XmlResponseBaseModel {
         return this.result.equalsIgnoreCase(OcsResponseParam.SUCCESS_RESULT.getKey());
     }
 
-    protected String getXmlValue(String expression) {
+    public String getXmlValue(String expression) {
         if (this.responseDoc == null) {
             throw new RuntimeException("parsing xml response to xml document error, ocsResponseDoc is null");
         }

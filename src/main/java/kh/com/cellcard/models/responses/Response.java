@@ -26,6 +26,12 @@ public class Response {
         this.data.additionalData = additionalData;
     }
 
+    protected Response(Object additionalData) {
+        this.meta = ResponseMeta.buildMeta();
+        this.data = ResponseData.success();
+        this.data.additionalData = additionalData;
+    }
+
     protected Response(String errorMessage, Object additionalData, CorrelationService correlationService) {
         this.meta = ResponseMeta.buildMeta(correlationService);
         this.data = ResponseData.success(errorMessage);
@@ -62,10 +68,8 @@ public class Response {
         return new Response();
     }
 
-    public static Response success(
-            Object additionalData,
-            CorrelationService correlationService) {
-        return new Response(additionalData, correlationService);
+    public static Response success(Object additionalData) {
+        return new Response(additionalData);
     }
 
     public static Response success(
@@ -98,6 +102,10 @@ public class Response {
 
     public void setRequestId(String requestId) {
         this.meta.requestId = requestId;
+    }
+
+    public void setMeta(CorrelationService correlationService) {
+        this.meta = ResponseMeta.buildMeta(correlationService);
     }
 }
 
