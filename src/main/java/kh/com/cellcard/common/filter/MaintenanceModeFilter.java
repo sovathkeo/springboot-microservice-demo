@@ -58,6 +58,7 @@ public class MaintenanceModeFilter extends OncePerRequestFilter {
             writer.print(body);
             writer.flush();
             writer.close();
+            return;
         }
         filterChain.doFilter(request, response);
     }

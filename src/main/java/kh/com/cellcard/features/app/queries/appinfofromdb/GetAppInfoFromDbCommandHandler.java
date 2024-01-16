@@ -14,6 +14,8 @@ public class GetAppInfoFromDbCommandHandler extends RequestCommandHandler<GetApp
 
     @Override
     public Response handle(GetAppInfoFromDbCommand command) {
+        super.setRequestLogParams("","","");
+        super.logInfo();
         return Response.success(appSetting);
     }
 }

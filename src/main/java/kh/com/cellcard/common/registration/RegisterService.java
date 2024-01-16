@@ -8,7 +8,7 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 public class RegisterService {
 
     public static void registers() {
-        registerTelegram();
+        //registerTelegram();
     }
 
     private static void registerTelegram() {

@@ -37,7 +37,7 @@ public class SecurityConfig {
         http
             .csrf(AbstractHttpConfigurer::disable)
             .sessionManagement(x -> x.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authenticationManager(authenticationManager())
+            //.authenticationManager(authenticationManager())
             .addFilterBefore(new MaintenanceModeFilter(), UsernamePasswordAuthenticationFilter.class)
             .addFilterBefore(new ExceptionFilter(), UsernamePasswordAuthenticationFilter.class)
             .addFilterBefore(new LogFilter(), UsernamePasswordAuthenticationFilter.class);
